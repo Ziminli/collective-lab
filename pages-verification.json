@@ -1,0 +1,11 @@
+{
+  "projectSubpath": "/collective-lab/",
+  "topics": 30,
+  "javaScriptSyntax": "passed",
+  "routing": "passed",
+  "directHashReload": "passed",
+  "pipelineSelector": "passed",
+  "languageThemeControls": "passed",
+  "browserErrors": [],
+  "failedAssets": []
+}
