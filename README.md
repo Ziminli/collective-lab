@@ -1,5 +1,7 @@
 # Collective Lab
 
+[Open the live website](https://ziminli.github.io/collective-lab/) · [中文 / English](https://ziminli.github.io/collective-lab/#/communication/all-reduce)
+
 An illustrated, technically detailed field guide to distributed deep learning. Open **index.html** in a modern browser, or serve this directory:
 
 ```sh
