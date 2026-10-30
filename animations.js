@@ -136,6 +136,7 @@ function conceptFrames(topic,mode,variant){
  return f;
 }
 function buildFrames(topic,algorithm,mode){
+ if(topic.curriculum)return modelFrames(topic,algorithm,mode);
  if(topic.id==='reduce-scatter'&&algorithm==='Recursive halving'){
   let v=tensorInputs(),f=[];const add=(title,text,edges)=>f.push({kind:'ranks',values:clone(v),title,text,edges,center:'HALVE + REDUCE'});
   add('Begin with four matching shards','Every rank contributes to the same four tensor positions.',[]);
@@ -304,4 +305,4 @@ function renderConcept(f){
  }
  return s;
 }
-function sceneSVG(frame){if(frame.kind==='pipeline-schedule')return pipelineSVG(frame);const compact=frame.kind==='ranks'&&matchMedia('(max-width:700px)').matches;return `<svg class="scene ${frame.kind==='ranks'?'ranks-scene':'concept-scene'}" viewBox="${compact?'0 0 420 395':'0 0 720 365'}" role="img" aria-labelledby="scene-title scene-desc" xmlns="http://www.w3.org/2000/svg"><title id="scene-title">${esc(frame.title)}</title><desc id="scene-desc">${esc(frame.text)}</desc><defs><marker id="arrowhead" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M 0 0 L 7 3.5 L 0 7" fill="none" stroke="#8aa376" stroke-width="1.1"/></marker></defs>${frame.kind==='ranks'?renderRanks(frame):renderConcept(frame)}</svg>`;}
+function sceneSVG(frame){if(frame.kind==='model')return modelSVG(frame);if(frame.kind==='pipeline-schedule')return pipelineSVG(frame);const compact=frame.kind==='ranks'&&matchMedia('(max-width:700px)').matches;return `<svg class="scene ${frame.kind==='ranks'?'ranks-scene':'concept-scene'}" viewBox="${compact?'0 0 420 395':'0 0 720 365'}" role="img" aria-labelledby="scene-title scene-desc" xmlns="http://www.w3.org/2000/svg"><title id="scene-title">${esc(frame.title)}</title><desc id="scene-desc">${esc(frame.text)}</desc><defs><marker id="arrowhead" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M 0 0 L 7 3.5 L 0 7" fill="none" stroke="#8aa376" stroke-width="1.1"/></marker></defs>${frame.kind==='ranks'?renderRanks(frame):renderConcept(frame)}</svg>`;}

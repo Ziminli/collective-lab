@@ -1,0 +1,426 @@
+{
+  "checked": "2026-10-30",
+  "scope": "Official papers, author model cards, released configuration and source code; illustrative matrices are not model weights.",
+  "sources": [
+    {
+      "name": "openai-models",
+      "url": "https://developers.openai.com/api/docs/models",
+      "status": 200,
+      "bytes": 404459,
+      "sha256": "29a71637907f8b945ee4c6ef4e46f6bb2eb37ae2bab4ea90e9571d66e4e81078"
+    },
+    {
+      "name": "openai-gpt-oss",
+      "url": "https://developers.openai.com/api/docs/models/gpt-oss-120b",
+      "status": 200,
+      "bytes": 438650,
+      "sha256": "3f2258e0f57e40f6662af243927986e1c78d16dddd6c0b316a87f3f296857285"
+    },
+    {
+      "name": "openai-gpt41",
+      "url": "https://developers.openai.com/api/docs/models/gpt-4.1",
+      "status": 200,
+      "bytes": 439922,
+      "sha256": "d4219bea6c49980b6e2bddb82a2ee2505be0617f049cd33fd4cbd2a491d78b75"
+    },
+    {
+      "name": "ds-v32",
+      "url": "https://raw.githubusercontent.com/deepseek-ai/DeepSeek-V3.2/main/README.md",
+      "status": 200,
+      "bytes": 6895,
+      "sha256": "dffcdf358a42599945d49293a4f210dbe589141085207b76c081c9ace1f8fd74"
+    },
+    {
+      "name": "ds-v3",
+      "url": "https://raw.githubusercontent.com/deepseek-ai/DeepSeek-V3/main/README.md",
+      "status": 200,
+      "bytes": 20841,
+      "sha256": "1f766f151bb4d501b18c9d1e229ac25682c68c75893d6d3bc9734e2a60125c0e"
+    },
+    {
+      "name": "deepseek-repos",
+      "url": "https://api.github.com/orgs/deepseek-ai/repos?per_page=100",
+      "status": 200,
+      "bytes": 251108,
+      "sha256": "8ce1f15588f099cadb82cd791c3e49c95127c059d9a4c61d8550b722e1535cd5"
+    },
+    {
+      "name": "qwen-repos",
+      "url": "https://api.github.com/orgs/QwenLM/repos?per_page=100",
+      "status": 200,
+      "bytes": 320952,
+      "sha256": "d2ede816bd13ff4f7e8f3cf77c9f8a40fe84755019eecf46a6f78ace7bac81fa"
+    },
+    {
+      "name": "qwen35",
+      "url": "https://raw.githubusercontent.com/QwenLM/Qwen3.5/main/README.md",
+      "status": 200,
+      "bytes": 14314,
+      "sha256": "a71ec46607f81d6056336fb0a8431a26a1c7d8db6ac568a0c021c36f1ed3c92e"
+    },
+    {
+      "name": "qwen3",
+      "url": "https://raw.githubusercontent.com/QwenLM/Qwen3/main/README.md",
+      "status": 200,
+      "bytes": 24697,
+      "sha256": "0b2c2bb11806f7a00c8465f2586e2e99f15de28622fd5c9b70b83ae1ab18c75d"
+    },
+    {
+      "name": "qwen38",
+      "url": "https://raw.githubusercontent.com/QwenLM/Qwen3.8/main/README.md",
+      "status": 200,
+      "bytes": 14314,
+      "sha256": "a71ec46607f81d6056336fb0a8431a26a1c7d8db6ac568a0c021c36f1ed3c92e"
+    },
+    {
+      "name": "mamba",
+      "url": "https://raw.githubusercontent.com/state-spaces/mamba/main/README.md",
+      "status": 200,
+      "bytes": 14829,
+      "sha256": "46f3e7412d724fb9bedba32130b73df53625483ece8df92d29146e690434acb9"
+    },
+    {
+      "name": "llama4",
+      "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama4/MODEL_CARD.md",
+      "status": 200,
+      "bytes": 23708,
+      "sha256": "a1739083c8a496ca0c121d90b98659a6aa7e36fcc0092581db35ef99736d104f"
+    },
+    {
+      "name": "rwkv7",
+      "url": "https://raw.githubusercontent.com/BlinkDL/RWKV-LM/main/README.md",
+      "status": 200,
+      "bytes": 61420,
+      "sha256": "94aa894177086b4e513404c838237f1fd95f5c5b94347bc8f729924a77305d4c"
+    },
+    {
+      "name": "flux",
+      "url": "https://raw.githubusercontent.com/black-forest-labs/flux/main/README.md",
+      "status": 200,
+      "bytes": 6721,
+      "sha256": "d87b208a6a7b4669f08fa1882025c6fe825ee29605b0250d0b9f56b36ce27078"
+    },
+    {
+      "name": "hf-qwen-list",
+      "url": "https://huggingface.co/api/models?author=Qwen&search=Qwen3.8&limit=50",
+      "status": 200,
+      "bytes": 2809,
+      "sha256": "829a84746baaac2085d072eaa40076041cbd145544c1d2fbdcda0bae713e8c1d"
+    },
+    {
+      "name": "hf-deepseek-list",
+      "url": "https://huggingface.co/api/models?author=deepseek-ai&limit=100&sort=lastModified&direction=-1",
+      "status": 200,
+      "bytes": 46451,
+      "sha256": "b6c90f2f178146d987b6813d724132b1f87b51e7706f92b065a9bd0c343cee66"
+    },
+    {
+      "name": "ds-v3-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V3/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1660,
+      "sha256": "cbf0b95dc614de208a109bb5fd4e7eed11385e9c68411d2c17db5319443035d9"
+    },
+    {
+      "name": "ds-v2-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V2/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1540,
+      "sha256": "36f572d2909bd108d73a814c585fd61afd56266960a13eb67c713e229d3435d1"
+    },
+    {
+      "name": "ds-v31-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.1/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1686,
+      "sha256": "3e5d192d745758862b0a3e6338ee181991db49933dbbd3185e1bde34944e7bad"
+    },
+    {
+      "name": "ds-r1-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-R1/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1660,
+      "sha256": "79ddea672a62e95d3f0be27be434375538e1988975971cffcf87c96c1de84a65"
+    },
+    {
+      "name": "qwen3-moe-config",
+      "url": "https://huggingface.co/Qwen/Qwen3-235B-A22B/resolve/main/config.json",
+      "status": 200,
+      "bytes": 965,
+      "sha256": "0ecd5d6fe6f2db6739e4e36ab06b88ebe7bd013ef31b9583f43796059a2b23a4"
+    },
+    {
+      "name": "qwen25-config",
+      "url": "https://huggingface.co/Qwen/Qwen2.5-7B/resolve/main/config.json",
+      "status": 200,
+      "bytes": 686,
+      "sha256": "267ce68584c5f24c3b267d934db2de68dd21d1ca677fb78ed809eb60067f7642"
+    },
+    {
+      "name": "qwen3-config",
+      "url": "https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json",
+      "status": 200,
+      "bytes": 728,
+      "sha256": "f7c4eadfbbf522470667b797a3c89be2524832d2d599797248dc304fff447c30"
+    },
+    {
+      "name": "ds-v32-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1552,
+      "sha256": "c7fa8b191e9936d8e6a57d864baab82b792fae16a116416cdd3a75ba76bc5af1"
+    },
+    {
+      "name": "qwen35-code",
+      "url": "https://raw.githubusercontent.com/huggingface/transformers/main/src/transformers/models/qwen3_5/modeling_qwen3_5.py",
+      "status": 200,
+      "bytes": 87622,
+      "sha256": "41a55adcfaebf92a762de7ca1c5c456310d3e03c64d4413a90ccf098c00dc6d8"
+    },
+    {
+      "name": "gpt-oss-config",
+      "url": "https://developers.openai.com/api/docs/models/gpt-oss-120b",
+      "status": 200,
+      "bytes": 438650,
+      "sha256": "3f2258e0f57e40f6662af243927986e1c78d16dddd6c0b316a87f3f296857285"
+    },
+    {
+      "name": "qwen38-config",
+      "url": "https://huggingface.co/Qwen/Qwen3.8-27B/resolve/main/config.json",
+      "status": 200,
+      "bytes": 4312,
+      "sha256": "191e0af232104ed8b65258cf3fb2b842e288008baca7633c11b82a1ac7203aab"
+    },
+    {
+      "name": "qwen-next-config",
+      "url": "https://huggingface.co/Qwen/Qwen3-Next-80B-A3B-Instruct/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1154,
+      "sha256": "2d483c7cabad7c8704478ed4038fa7e7b2eff840bc00a118eccbe38e2b488303"
+    },
+    {
+      "name": "qwen35-config",
+      "url": "https://huggingface.co/Qwen/Qwen3.5-397B-A17B/resolve/main/config.json",
+      "status": 200,
+      "bytes": 4177,
+      "sha256": "3ae7fa89c2f7d1354096418ddaf1331e9e0898a8ca11e804fb6dbaa087efb7da"
+    },
+    {
+      "name": "rwkv7-code",
+      "url": "https://raw.githubusercontent.com/BlinkDL/RWKV-LM/main/RWKV-v7/train_temp/src/model.py",
+      "status": 200,
+      "bytes": 37405,
+      "sha256": "d701aa791959b42c248af87553ed7477e91911dc129654c8f49d43ae00e9fff3"
+    },
+    {
+      "name": "ds-dsa-code",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2-Exp/resolve/main/inference/model.py",
+      "status": 200,
+      "bytes": 38639,
+      "sha256": "bfe5b89186b579910b6d59fa7e0cf1f7a75ceb4ec5d0f5b54f0ccbe77cdb6a63"
+    },
+    {
+      "name": "ds-v41-card",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/raw/main/README.md",
+      "status": 200,
+      "bytes": 13007,
+      "sha256": "347c9db4e5506acb531cbc3b724407ab88e9af8781679152f0823d7bac16d251"
+    },
+    {
+      "name": "ds-v4-card",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/raw/main/README.md",
+      "status": 200,
+      "bytes": 13139,
+      "sha256": "c4d714818a4d3333542edc7d38ea065825a0cf7aa8fea3605bbd1d1c18e4a610"
+    },
+    {
+      "name": "ds-v4-pro-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1828,
+      "sha256": "5fe4568daee51c208cb8a79538eaeda090ae011ade1dee2c386aa95f569c810e"
+    },
+    {
+      "name": "ds-v41-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/resolve/main/config.json",
+      "status": 200,
+      "bytes": 3311,
+      "sha256": "8be45ce0476004a3f529fd896115a4a2e800a129ad2d3ec05b16050f52e21879"
+    },
+    {
+      "name": "ds-v4-flash-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1749,
+      "sha256": "b628e63398a645abc711d92207f8737dd8140f7a4ef1e0a5b3616019e0ddd818"
+    },
+    {
+      "name": "ds-v32-final-card",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2/raw/main/README.md",
+      "status": 200,
+      "bytes": 7321,
+      "sha256": "22b9f57e1ece2df27f9de0e71377e19481f7a6892eca8bc23e73fcdffe1d845c"
+    },
+    {
+      "name": "gptoss-doc",
+      "url": "https://developers.openai.com/api/docs/models/gpt-oss-120b.md",
+      "status": 200,
+      "bytes": 3361,
+      "sha256": "c86e04912baaae00ed7252d49367131a9794b8c10c343a65a2e7d429efecadbc"
+    },
+    {
+      "name": "qwen38-card",
+      "url": "https://huggingface.co/Qwen/Qwen3.8-27B/raw/main/README.md",
+      "status": 200,
+      "bytes": 64985,
+      "sha256": "57e4bdb258ee1a7d2635c5174ebd4e56abe392505cdb5f8bbb356b0dc4293641"
+    },
+    {
+      "name": "qwen38-big-config",
+      "url": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B/resolve/main/config.json",
+      "status": 200,
+      "bytes": 3951,
+      "sha256": "4e3819548967e319ab435d044a3a331dbe3b078590ce822e9d74b79430533987"
+    },
+    {
+      "name": "ds-v32-final-config",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V3.2/resolve/main/config.json",
+      "status": 200,
+      "bytes": 1552,
+      "sha256": "c7fa8b191e9936d8e6a57d864baab82b792fae16a116416cdd3a75ba76bc5af1"
+    },
+    {
+      "name": "gptoss-card",
+      "url": "https://huggingface.co/openai/gpt-oss-120b/raw/main/README.md",
+      "status": 200,
+      "bytes": 7092,
+      "sha256": "92b0408cf5dce04e4c5e4e5f2be0361da710d3650baefd7d7519badd1c687919"
+    },
+    {
+      "name": "gpt2-code",
+      "url": "https://raw.githubusercontent.com/openai/gpt-2/master/src/model.py",
+      "status": 200,
+      "bytes": 6503,
+      "sha256": "2ff5065f5cac3dc93065f8a3f36eb013e407972a80abcd4ee6b89a7138a0d5a6"
+    },
+    {
+      "name": "gpt41-doc",
+      "url": "https://developers.openai.com/api/docs/models/gpt-4.1.md",
+      "status": 200,
+      "bytes": 3683,
+      "sha256": "baa0f3aa720c9ab9faf3d060d56549ecc6273dd366336d7269c92bebe95b3389"
+    },
+    {
+      "name": "llama3-card",
+      "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama3_1/MODEL_CARD.md",
+      "status": 200,
+      "bytes": 26727,
+      "sha256": "a37da4be5eb00d97ee0017cadf54c55e8aca84c715fa7d0981d3f2bc13b763ef"
+    },
+    {
+      "name": "gptoss-config",
+      "url": "https://huggingface.co/openai/gpt-oss-120b/resolve/main/config.json",
+      "status": 200,
+      "bytes": 2089,
+      "sha256": "933aeb666a3fd851133ddd7686414f369bc564c4185fb5704416550879f10566"
+    },
+    {
+      "name": "qwen-delta-doc",
+      "url": "https://raw.githubusercontent.com/fla-org/flash-linear-attention/main/fla/ops/gated_delta_rule/naive.py",
+      "status": 200,
+      "bytes": 5290,
+      "sha256": "d1cf17992349fd3e94af999b22e3d3a81be4a2d1881ce5b70a3457257166e0cb"
+    },
+    {
+      "name": "sd-card",
+      "url": "https://huggingface.co/stable-diffusion-v1-5/stable-diffusion-v1-5/raw/main/README.md",
+      "status": 200,
+      "bytes": 14445,
+      "sha256": "2079161f9df7524bd9eca5e53ff5911271b8551e0f868b7b5a92b84776df28a3"
+    },
+    {
+      "name": "ds-v4-code",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4-Flash/resolve/main/inference/model.py",
+      "status": 200,
+      "bytes": 38632,
+      "sha256": "ce962f1face79d4f633d36436576214057a7e11443c9789935e1deb5c6cd1d71"
+    },
+    {
+      "name": "llama2-config",
+      "url": "https://raw.githubusercontent.com/meta-llama/llama-models/main/models/llama2/MODEL_CARD.md",
+      "status": 200,
+      "bytes": 7622,
+      "sha256": "2fb1088542ff963db5b2e248e73a2d1fcb029f5e772ed09aed10f47e562c64a9"
+    },
+    {
+      "name": "ds-v41-code",
+      "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash/resolve/main/inference/model.py",
+      "status": 200,
+      "bytes": 61665,
+      "sha256": "e5decd76fe70fd56ef2f10124d245c6f64fb6a0003cc9068a1d3182a168b8d2d"
+    },
+    {
+      "name": "diffusion-paper",
+      "url": "https://arxiv.org/abs/2006.11239",
+      "status": 200,
+      "bytes": 42343,
+      "sha256": "e052da020485c131ebf087729cec54b4089a49cf75a2d6087166cb15c8648688"
+    },
+    {
+      "name": "mamba-paper",
+      "url": "https://arxiv.org/abs/2312.00752",
+      "status": 200,
+      "bytes": 44247,
+      "sha256": "c7f3f499c13bcf48f3ffcadb02de7b0b01b2210c19b0d2358cf101d3cadb8bdf"
+    },
+    {
+      "name": "transformer-paper",
+      "url": "https://arxiv.org/abs/1706.03762",
+      "status": 200,
+      "bytes": 44230,
+      "sha256": "4dc896b86d954997eb7b2572b29a761da642de00f4229bf648da3580b2ca7785"
+    },
+    {
+      "name": "mamba2-paper",
+      "url": "https://arxiv.org/abs/2405.21060",
+      "status": 200,
+      "bytes": 41358,
+      "sha256": "b0a017295d702aaf7015eadbb5af3af60117a64966a86d6d63e4f3300d8e2c12"
+    },
+    {
+      "name": "vit-paper",
+      "url": "https://arxiv.org/abs/2010.11929",
+      "status": 200,
+      "bytes": 44621,
+      "sha256": "39c26c3c7c5f9f00e906f3e0392ac2049d763835d6b0e1315455b89f36b1f0f8"
+    },
+    {
+      "name": "gpt3-paper",
+      "url": "https://arxiv.org/abs/2005.14165",
+      "status": 200,
+      "bytes": 49631,
+      "sha256": "ab71cfaa5b3b9faff9f0624cdb9ce4fa74d843448f2e7e7343fe926616ab98cf"
+    },
+    {
+      "name": "rope-paper",
+      "url": "https://arxiv.org/abs/2104.09864",
+      "status": 200,
+      "bytes": 44485,
+      "sha256": "05f358917fc49cfe74bea6da957e548f7b6d63b871fa21add387e20a7c2ba314"
+    },
+    {
+      "name": "rwkv-paper",
+      "url": "https://arxiv.org/abs/2503.14456",
+      "status": 200,
+      "bytes": 45150,
+      "sha256": "0ee16888cdddbc34ff698c15f6cb225bd9786b28f469249def771e141c40ea76"
+    },
+    {
+      "name": "flash-paper",
+      "url": "https://arxiv.org/abs/2205.14135",
+      "status": 200,
+      "bytes": 44573,
+      "sha256": "08fc19eeceb6b92cbd088c522dd9147e177ac2c7d99c9474deb447387d66fb30"
+    }
+  ]
+}

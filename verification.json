@@ -1,9 +1,9 @@
 {
-  "edition": 4,
+  "edition": 5,
   "date": "2026-10-30",
-  "topics": 30,
-  "variants": 63,
-  "implementationFrames": 719,
+  "topics": 79,
+  "variants": 425,
+  "implementationFrames": 2843,
   "logicalFrames": 36,
   "algorithmContractAgreement": "passed",
   "selectionAwareCostFormulaSteps": "passed",
@@ -20,169 +20,169 @@
       "language": "en",
       "theme": "light",
       "width": 1920,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "light",
       "width": 1440,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "light",
       "width": 1024,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "light",
       "width": 768,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "light",
       "width": 700,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "light",
       "width": 390,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "light",
       "width": 320,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "dark",
       "width": 1920,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "dark",
       "width": 1440,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "dark",
       "width": 1024,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "dark",
       "width": 768,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "dark",
       "width": 700,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "dark",
       "width": 390,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "en",
       "theme": "dark",
       "width": 320,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "light",
       "width": 1920,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "light",
       "width": 1440,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "light",
       "width": 1024,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "light",
       "width": 768,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "light",
       "width": 700,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "light",
       "width": 390,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "light",
       "width": 320,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "dark",
       "width": 1920,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "dark",
       "width": 1440,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "dark",
       "width": 1024,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "dark",
       "width": 768,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "dark",
       "width": 700,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "dark",
       "width": 390,
-      "pages": 30
+      "pages": 79
     },
     {
       "language": "zh",
       "theme": "dark",
       "width": 320,
-      "pages": 30
+      "pages": 79
     }
   ],
   "browserErrors": [],
@@ -195,8 +195,8 @@
     "light",
     "dark"
   ],
-  "bilingualThemeConfigurations": 252,
-  "implementationFramePresentations": 2876,
+  "bilingualThemeConfigurations": 1700,
+  "implementationFramePresentations": 11372,
   "logicalFramePresentations": 240,
   "localizedSelectionAwareDetails": "passed",
   "preferenceStatePreservation": "passed",
@@ -337,5 +337,40 @@
   },
   "pipelineLanguageAudit": "passed; conventional schedule names and math symbols retained",
   "pipelineSavedActivationCounters": "zero initially and after drain; release at full B or W completion",
-  "darkPalette": "neutral charcoal, cool gray accents; data ownership retains pastel encoding"
+  "darkPalette": "neutral charcoal, cool gray accents; data ownership retains pastel encoding",
+  "modelCurriculum": {
+    "architectureBlueprints": 7,
+    "operatorPages": 18,
+    "modelPages": 24,
+    "sourceSnapshots": 60,
+    "numericalChecks": [
+      "dense attention and normalized weights",
+      "online tiled attention equals dense attention",
+      "attention backward finite differences",
+      "RMSNorm, LayerNorm and GroupNorm statistics",
+      "RoPE norm-preserving joint rotation and changed relative-position score",
+      "attention output gating",
+      "top-k expert combine weights",
+      "mHC mixing and stochastic constraints",
+      "DeltaNet sequential prediction/error updates",
+      "RWKV-6/7 distinct recurrence terms",
+      "2D convolution and causal channelwise convolution",
+      "diffusion reconstruction and constant-velocity Euler trajectory",
+      "conditional-memory gate and fusion",
+      "language/theme preserve selected operator and animation state",
+      "preference persistence",
+      "mobile cross-attention and Chinese controls"
+    ],
+    "structureGraphs": [
+      "Transformer decoder-only / encoder-only / encoder-decoder",
+      "Mamba SSM without a separate Transformer FFN",
+      "Qwen recurrent / full-attention hybrid mixer",
+      "Separate diffusion training and generation graphs"
+    ],
+    "modelFacts": "released checkpoint configurations and author cards; no invented hosted-GPT internal dimensions",
+    "matrixExamples": "illustrative; exact arithmetic checked independently",
+    "scopeNotes": "model-notes.md",
+    "sourceEvidence": "model-sources.json"
+  },
+  "responsiveAllTopics": 79
 }

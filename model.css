@@ -1,0 +1,25 @@
+/* Architecture and model curriculum, using the guide's existing paper/ink palette. */
+.model-nav-label{font:9px var(--mono);letter-spacing:1px;color:var(--muted);padding:14px 11px 7px;text-transform:uppercase}
+.model-family-links{display:flex;gap:7px;flex-wrap:wrap;margin:0 0 18px}
+.model-family-links a,.model-view-tabs button{border:1px solid var(--border);background:var(--paper);border-radius:6px;font-size:10px;padding:8px 10px;color:var(--ink);line-height:1.4}
+.model-family-links a.current,.model-view-tabs button.selected{background:#e8edf4;border-color:#98aac2;color:#294460}
+.model-fact-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border:1px solid var(--border);border-radius:9px;overflow:hidden;background:var(--paper)}
+.model-fact-strip>div{padding:15px 18px;border-right:1px solid var(--border);min-width:0}.model-fact-strip>div:last-child{border:0}.model-fact-strip span{display:block;color:#788494;font:9px var(--mono);margin-bottom:9px}.model-fact-strip strong{display:block;font:500 12px var(--mono);overflow-wrap:anywhere;line-height:1.6}
+.model-source-status{display:flex;align-items:center;gap:6px;font:9px var(--mono);color:#7c8796;flex-wrap:wrap;margin:12px 0 21px}.model-source-status a{margin-left:auto;text-decoration:underline;text-underline-offset:3px}
+.model-view-tabs{display:flex;flex-wrap:wrap;gap:7px;padding:0 0 22px;margin-bottom:2px;border-bottom:1px solid var(--border)}.model-view-tabs button:hover,.model-family-links a:hover{border-color:#8198b6}
+.model-scene{aspect-ratio:720/460;max-height:none;min-height:0}.model-scene .node-shell{stroke:#cfd7e3;fill:#fcfdff}.model-scene .model-active{stroke:#6588b1;stroke-width:2;fill:#ecf1f8}.model-scene .node-label{letter-spacing:0}.model-scene .diagram-label{letter-spacing:.3px}.model-cell{stroke:#fff;stroke-width:.6px}.model-cell-hot{stroke:#4b6e9b;stroke-width:2px}.model-scene .masked-cell{fill:#e7eaf0}.model-scene .on-data{fill:#29394d!important}.model-scene .matrix-label{fill:#718095}.model-edge-active{stroke:#6d86a4}.model-scene .subtext{fill:#788699}.model-scene .matrix-bracket{stroke:#8795a5}
+.section-nav{min-width:0;flex-shrink:1;overflow-x:auto;scrollbar-width:none}.section-nav::-webkit-scrollbar{display:none}.section-nav a{white-space:nowrap;padding-left:11px;padding-right:11px;flex-shrink:0}.site-header{gap:16px}.guide-button{display:none}
+[data-theme=dark] .model-family-links a,[data-theme=dark] .model-view-tabs button,[data-theme=dark] .model-fact-strip{background:#1e2127;border-color:#373c46;color:#d5dbe5}
+[data-theme=dark] .model-family-links a.current,[data-theme=dark] .model-view-tabs button.selected{background:#303b4c;color:#e8edf5;border-color:#7086a4}
+[data-theme=dark] .model-fact-strip span,[data-theme=dark] .model-source-status,[data-theme=dark] .model-nav-label{color:#a1abb9}
+[data-theme=dark] .model-scene .node-shell{fill:#252a33;stroke:#495565}[data-theme=dark] .model-scene .model-active{fill:#33445d;stroke:#90acd0}
+[data-theme=dark] .model-scene .on-data{fill:#29394d!important}[data-theme=dark] .model-scene .masked-cell{fill:#e7eaf0}[data-theme=dark] .model-scene .model-cell{stroke:#2b3441}
+@media(max-width:1200px){.model-fact-strip{grid-template-columns:repeat(2,minmax(0,1fr))}.model-fact-strip>div:nth-child(2){border-right:0}.model-fact-strip>div:nth-child(-n+2){border-bottom:1px solid var(--border)}}
+@media(max-width:1100px){.section-nav{justify-content:flex-start;padding:0 16px;gap:4px}.section-nav a{flex:none;padding:8px 17px}.site-header .preferences{margin-left:auto}}
+@media(max-width:700px){.model-scene{min-width:660px!important}.model-fact-strip>div{padding:12px}.model-fact-strip strong{font-size:11px}.model-view-tabs button,.model-family-links a{font-size:10px}.model-source-status a{margin-left:0}.section-nav{padding:0 12px;justify-content:flex-start}.section-nav a{flex:none;padding:8px 13px;font-size:11px}.scene-wrap:has(.model-scene) .scene-topline{min-width:0}.model-scene .node-label{font-size:10px}.model-view-tabs{padding-bottom:16px}}
+@media print{.model-view-tabs{display:none}.model-fact-strip{break-inside:avoid}}
+.model-scene[data-playing=true] .model-edge-active{stroke-dasharray:6 4;animation:model-flow 1s linear infinite}@keyframes model-flow{to{stroke-dashoffset:-20}}
+@media(prefers-reduced-motion:reduce){.model-scene .model-edge-active{animation:none!important}}
+
+@media(min-width:1500px){.guide-button{display:flex}}
+[data-theme=dark] svg.model-scene .masked-cell{fill:#e7eaf0}

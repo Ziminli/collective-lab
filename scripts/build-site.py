@@ -34,15 +34,15 @@ def main():
     parser.feed((ROOT / 'index.html').read_text(encoding='utf-8'))
     required = {'styles.css', 'content.js', 'lessons.js', 'animations.js',
                 'tensor-views.js', 'semantics.js', 'zh.js', 'pipeline-plans.js',
-                'pipeline.js', 'app.js', 'preferences.js'}
+                'pipeline.js', 'model-content.js', 'model-views.js', 'model.css', 'app.js', 'preferences.js'}
     if parser.assets != required:
         raise ValueError(f'Unexpected asset manifest: {parser.assets ^ required}')
     DEST.mkdir(exist_ok=True)
     # Limit deployment to public site assets; repository metadata and tooling stay out.
-    for asset in sorted(required | {'index.html', 'pipeline-notes.md'}):
+    for asset in sorted(required | {'index.html', 'pipeline-notes.md', 'model-notes.md', 'model-sources.json'}):
         shutil.copyfile(ROOT / asset, DEST / asset)
     (DEST / '.nojekyll').touch()
-    print(f'Validated and assembled {len(required) + 3} files in {DEST}')
+    print(f'Validated and assembled {len(required) + 5} files in {DEST}')
 
 
 if __name__ == '__main__':

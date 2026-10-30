@@ -152,6 +152,7 @@ for(const t of topics){
  }
 }
 function selectedLesson(topic,option,mode){
+ if(topic.curriculum)return modelSelectedLesson(topic,option,mode);
  const base={formula:topic.formula,cost:topic.cost,costNote:topic.costNote,steps:topic.steps,notation:topic.notation||[],details:topic.details||[],comparisons:topic.comparisons};
  const variant=topic.algorithmDetails?.[option]||topic.variantDetails?.[option]||{};
  const result={...base,...topic.modes?.[mode],...variant};

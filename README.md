@@ -20,6 +20,10 @@ Each communication page first animates its abstract input/output contract, then 
 
 **Techniques (8):** ZeRO stages 1–3, gradient accumulation, activation checkpointing, communication overlap, continuous batching, KV cache/paging, gradient compression, and inference quantization.
 
+**Architectures (25):** 7 blueprints (Transformer, MoE, RWKV, state-space/Mamba, diffusion/flow, CNN and ViT) plus 18 key-operator pages. Transformer views compare decoder-only, encoder-only and encoder-decoder layouts. Numerical walkthroughs cover attention and head sharing, cross-attention, gated attention, FlashAttention, RoPE, normalization, FFNs, routing, MLA, sparse/compressed attention, mHC, SSMs, DeltaNet, RWKV state, convolution, diffusion updates, cross-layer KV reuse, Engram and speculative decoding.
+
+**Models (24):** DeepSeek V2/V3/V3.1/V3.2/V4/V4.1/R1; Qwen2.5/3 dense/3 MoE/3-Next/3.5/3.8; Llama 2/3.1/4; GPT-2/3/gpt-oss and documented hosted-GPT scope; RWKV-7, Mamba-2, Stable Diffusion v1.5 and FLUX.1. Model pages show reference-checkpoint dimensions, family comparisons, operator chips and training/inference differences. Undisclosed hosted-model internals are identified explicitly.
+
 ## Controls
 
 - Top-right **EN / 中文** switches the complete guide, diagram labels, and accessible controls between English and Simplified Chinese. Both languages are searchable.
@@ -27,7 +31,7 @@ Each communication page first animates its abstract input/output contract, then 
 - Separate logical-example and implementation playback controls. Logical autoplay runs once; implementation playback starts when requested on communication pages.
 - Play/pause, previous/next, restart, scrubbers, and 0.5×–2× implementation playback.
 - Space: play/pause. Left/right arrows: step. `/`: search topics. Escape: close the guide or mobile menu.
-- Search spans all three sections. Each topic has a shareable hash URL.
+- Search spans all five sections. Each topic has a shareable hash URL.
 - Symbols and model assumptions appear beside equations. Comparison tables and worked examples add detail on every page.
 - “The field guide” also explains rank, shard colors, and notation.
 - On phones, collective diagrams reflow to a compact layout. Wider strategy diagrams can be swiped horizontally.
@@ -42,6 +46,8 @@ Matrix views show numeric row/column TP products and their backward gradients, S
 The α–β cost models define P, α, β, and N on each communication page and omit contention, local compute, protocol details, and topology. Source links point to official MPI/NCCL/PyTorch documentation or original papers. The tree AllReduce cost describes the illustrated full-tensor reduce/broadcast baseline, not an optimized chunked/double-tree implementation. Exact library algorithm selection is version- and topology-dependent.
 
 The site works without network access, including both languages and themes. Google Fonts is an optional enhancement; built-in system fallbacks apply when unavailable. Documentation links require internet access. Language and theme preferences use localStorage when available. No analytics, accounts, cookies, or backend services are used.
+
+For model-specific source and example conventions, see [model-notes.md](model-notes.md) and [model-sources.json](model-sources.json). Model facts are dated snapshots of published releases; the small matrices are teaching examples.
 
 ## Files
 
@@ -59,11 +65,16 @@ The site works without network access, including both languages and themes. Goog
 - `zh.js`: Chinese explanations, controls, and animation translations.
 - `preferences.js`: language/theme controls, preference persistence, and SVG contrast handling.
 - `serve.py`: optional local static server, bound to localhost.
+- `model-content.js`: bilingual model curriculum, checkpoint facts and source links.
+- `model-views.js`: architecture/operator view selection and numerical SVG traces.
+- `model.css`: model navigation, fact strips and diagrams.
+- `model-notes.md`: example conventions, checkpoint scope and technical limits.
+- `model-sources.json`: dated source URLs and downloaded-source fingerprints.
 - `verification.json`: completed browser verification results.
 
 ## Verification
 
-Chrome checks cover all 30 topics, 63 algorithm/layout/mode configurations, both languages and themes (252 presentations), 2,876 implementation-frame presentations, and 240 logical-frame presentations. All topics were checked at widths 1920, 1440, 1024, 768, 700, 390, and 320 pixels in each language/theme combination. Preference persistence, state preservation, Chinese search, accessible labels, direct-file use, blocked-storage fallback, and matrix arithmetic were verified. See `verification.json`.
+The original distributed curriculum checks cover all 30 original topics, 63 algorithm/layout/mode configurations, both languages and themes (252 presentations), 2,876 implementation-frame presentations, and 240 logical-frame presentations. All topics were checked at widths 1920, 1440, 1024, 768, 700, 390, and 320 pixels in each language/theme combination. Preference persistence, state preservation, Chinese search, accessible labels, direct-file use, blocked-storage fallback, and matrix arithmetic were verified. The expanded 79-topic curriculum passed 1,700 view/language/theme presentations, 11,372 implementation-frame presentations and all 28 language/theme/width combinations. Independent numerical checks cover attention and gradients, RoPE, normalization, routing, mHC, DeltaNet/RWKV state, convolutions, diffusion updates and conditional memory. Mode-specific structure graphs and the GitHub Pages project path were also verified. See `verification.json`.
 
 ## GitHub Pages deployment
 
