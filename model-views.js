@@ -182,6 +182,7 @@ function modelSelectedLesson(t,option,mode){
  if(view.scene==='overview'&&t.modelData.kind==='diffusion'&&mode==='Training'){
   const flow=diffusionTrainingFlow(t.modelData);return {...lesson,formula:'ℒ = E₍x,t,noise₎ ‖denoiser(xₜ,t,c) − target(x,noise,t)‖²',cost:MODEL_IMAGE_TRAINING,steps:flow.map(n=>[n.title,n.text]),notation:[['x, xₜ, t, c, ℒ',MT('clean data, corrupted data, sampled time, conditioning and task loss','干净数据、扰动数据、采样时间、条件、任务损失')]]};
  }
+ if(view.scene==='mla')return{...lesson,formula:'scores=(qC K_Cᵀ+qR K_Rᵀ)/√(dN+dR); cache=(C_KV,K_R)',steps:MODEL_FRAME_COPY.mla.map(n=>[n.title,n.text]),notation:[['B,S,T,D,H',MT('batch, visible history, current queries, model width and heads','批次、可见历史、当前查询数、模型宽与头数')],['rKV,rQ',MT('KV latent width and query latent width','KV 潜变量宽及查询潜变量宽')],['dN,dR,dV',MT('content Q/K width, rotary Q/K width and value width','内容 Q/K 宽、旋转 Q/K 宽及值宽')],['W_DKV,W_KR,W_DQ',MT('D×rKV, D×dR and D×rQ down-projections','D×rKV、D×dR 及 D×rQ 下投影')],['W_UK,h,W_UV,h',MT('rKV×dN and rKV×dV head projections','rKV×dN 及 rKV×dV 逐头投影')],['W_UQ,C,W_UQ,R; W_O',MT('query expansion rQ×(H dN), rQ×(H dR); merged output (H dV)×D','查询展开 rQ×(H dN)、rQ×(H dR)；合并输出 (H dV)×D')]]};
  return lesson;
 }
 function modelFrames(topic,option,mode){
@@ -249,8 +250,7 @@ function renderModelOverview(f){
   f.model.pattern.forEach((p,i)=>{s+=modelBox(200+i*90,baseY-24,75,39,p,'',i===progress%f.model.pattern.length)});
   s+=modelNote(MT('Δ: Gated DeltaNet · A: full attention · SWA: sliding-window attention','Δ：门控 DeltaNet · A：完整注意力 · SWA：滑动窗口注意力'),baseY+35);
  }else{
-  const sub='₀₁₂₃₄₅';const vals=Array.from({length:3},(_,r)=>Array.from({length:6},(_,c)=>'h'+sub[r]+sub[c]));
-  s+=modelMat(246,baseY-3,vals,MT('Hidden tensor: token rows × feature columns','隐藏张量：token 行 × 特征列'),{cw:38,ch:22,hot:(r,c)=>c===progress%6});
+  const node=flow[Math.min(f.stage,n-1)];s+=modelBox(165,baseY-10,390,48,node.label,node.shape,true);
  }
  if(f.gradient)s+=modelNote(MT('Loss → gradients → learned parameters · dashed arrows show backward dependencies','损失 → 梯度 → 学习参数 · 虚线表示反向依赖'),435);
  else s+=modelNote(MT('Boxes summarize subgraphs; repeated blocks have their own weights.','方框概括子图；重复模型块拥有各自的权重。'),435);
@@ -308,7 +308,8 @@ function renderModelFFN(f){
  if(!gelu){s+=modelMat(213,228,[u],'xWu',{cw:53,ch:36});s+=modelLine(125,234,203,246,f.stage>=1)+modelLine(326,246,383,246,f.stage>=3);s+=modelBox(393,222,82,43,'⊙','',f.stage===3);s+=modelLine(618,130,475,240,f.stage>=3);}
  s+=modelMat(454,333,[f.stage>=3?hidden:['?','?']],gelu?MT('Hidden activation','隐藏激活'):MT('Gated features','门控特征'),{cw:90,ch:38,color:PALETTE[1]});
  s+=modelBox(99,326,164,62,'Wd : F → D','',f.stage===3)+modelLine(444,353,273,353,f.stage>=3);
- s+=modelNote(MT('The expansion is tokenwise; communication appears only when the weight layout requires it.','扩展按 token 独立计算；只有权重布局需要时才产生通信。'),424);return s;
+ s+=modelMat(110,397,[f.stage>=3?hidden:['?','?']],'Y = hidden · I₂',{cw:55,ch:25,color:PALETTE[3]});
+ s+=modelNote(MT('The expansion is tokenwise; communication appears only when the weight layout requires it.','扩展按 token 独立计算；只有权重布局需要时才产生通信。'),448);return s;
 }
 function renderModelRouting(f){
  const probs=[.1,.5,.3,.1],selected=[1,2];let s=modelMat(68,75,[probs],MT('Router probabilities','路由概率'),{cw:65,ch:37,hot:(_,c)=>f.stage>=1&&selected.includes(c)});

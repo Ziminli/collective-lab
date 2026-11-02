@@ -2,7 +2,7 @@
 const SPATIAL_COLORS=[0x68b8ed,0xb096eb,0xf1b25b,0x63c9b0];
 function spatialSupported(t){return t.section==='communication'||['tensor-parallel','sequence-parallel','context-parallel','hybrid-parallel','zero','fsdp'].includes(t.id);}
 class TensorSpace{
- constructor(){this.renderer=null;this.scene=null;this.camera=null;this.host=null;this.root=null;this.meshes=new Map();this.routes=[];this.labels=[];this.raf=0;this.angle=.57;this.elevation=.68;this.distance=12;this.selected=null;this.key='';this.frame=null;this.dark=false;this.resize=null;}
+ constructor(logical=false){this.logical=logical;this.payloads=[];this.reveals=[];this.renderer=null;this.scene=null;this.camera=null;this.host=null;this.root=null;this.meshes=new Map();this.routes=[];this.labels=[];this.raf=0;this.angle=.57;this.elevation=.68;this.distance=12;this.selected=null;this.key='';this.frame=null;this.dark=false;this.resize=null;}
  mount(host){
   if(this.host===host&&this.renderer)return true;this.detach();this.host=host;
   if(!window.THREE)return false;
@@ -11,7 +11,7 @@ class TensorSpace{
   this.scene=new THREE.Scene();this.camera=new THREE.PerspectiveCamera(36,1,.1,100);this.target=new THREE.Vector3(0,.4,0);this.root=new THREE.Group();this.scene.add(this.root);
   this.scene.add(new THREE.HemisphereLight(0xffffff,0x78889d,1.7));const light=new THREE.DirectionalLight(0xffffff,2);light.position.set(3,8,5);this.scene.add(light);
   const canvas=this.renderer.domElement;canvas.className='tensor-space-canvas';canvas.setAttribute('aria-label',tr(MT('Interactive GPU and tensor view. Drag to rotate; use zoom buttons.','可交互 GPU 与张量视图；拖动旋转，使用按钮缩放。')));canvas.setAttribute('role','img');host.prepend(canvas);this.bind(canvas);
-  this.resize=new ResizeObserver(()=>this.fit());this.resize.observe(host);this.fit();this.tick();return true;
+  this.resize=new ResizeObserver(()=>this.fit());this.resize.observe(host);this.fit();if(this.logical){this.angle=0;this.elevation=.85;this.distance=15*Math.max(1,1.44/(this.fitAspect||1.44));}this.tick();return true;
  }
  bind(canvas){
   let drag=null;
@@ -20,7 +20,7 @@ class TensorSpace{
   canvas.onpointerup=ev=>{if(drag&&Math.hypot(ev.clientX-drag.startX,ev.clientY-drag.startY)<6)this.pick(ev);drag=null;};canvas.onpointercancel=()=>drag=null;
  }
  detach(){cancelAnimationFrame(this.raf);this.resize?.disconnect();this.resize=null;if(this.root)this.disposeRoot();this.renderer?.domElement.remove();this.host=null;this.key='';this.rendered='';this.fitAspect=null;}
- disposeRoot(){this.root.traverse(o=>{o.geometry?.dispose();if(o.material){o.material.map?.dispose();o.material.dispose();}});this.root.clear();this.meshes.clear();this.labels=[];this.routes=[];}
+ disposeRoot(){this.root.traverse(o=>{o.geometry?.dispose();if(o.material){o.material.map?.dispose();o.material.dispose();}});this.root.clear();this.meshes.clear();this.labels=[];this.routes=[];this.payloads=[];this.reveals=[];}
  fit(){if(!this.host||!this.renderer)return;const w=this.host.clientWidth,h=this.host.clientHeight;if(w<1||h<1)return;const aspect=w/h,framing=state.topic.id==='tensor-parallel'?1.25:1.44;
   if(this.fitAspect&&Math.abs(aspect-this.fitAspect)>.001)this.distance=Math.max(7,Math.min(36,this.distance*Math.max(1,framing/aspect)/Math.max(1,framing/this.fitAspect)));this.fitAspect=aspect;
   this.labelFactor=Math.max(1,Math.min(1.6,1.1/aspect));for(const label of this.labels)if(label.userData.baseScale)label.scale.copy(label.userData.baseScale).multiplyScalar(this.labelFactor);
@@ -46,25 +46,77 @@ class TensorSpace{
   const packet=new THREE.Mesh(new THREE.SphereGeometry(.07,10,8),new THREE.MeshBasicMaterial({color}));this.root.add(packet);this.routes.push({curve,packet});
  }
  update(f,topic,force=false){
-  if(!this.host||!this.root)return;const key=topic.id+'|'+state.algorithm+'|'+state.mode+'|'+state.frame+'|'+document.documentElement.lang+'|'+document.documentElement.dataset.theme;
+  if(!this.host||!this.root)return;const key=topic.id+'|'+state.algorithm+'|'+state.mode+'|'+(this.logical?logicState.frame+'|'+logicState.entry:state.frame)+'|'+document.documentElement.lang+'|'+document.documentElement.dataset.theme;
   this.frame=f;this.dark=document.documentElement.dataset.theme==='dark';if(key===this.key&&!force)return;this.key=key;
   const old=new Map([...this.meshes].map(([id,m])=>[id,{pos:m.position.clone(),color:m.material.color.clone()}]));this.disposeRoot();
   this.target.set(0,-.35,0);
-  if(f.kind==='ranks')this.ranks(f,topic);
+  if(f.kind==='calculation')this.calculation(f);
+  else if(f.kind==='ranks')this.ranks(f,topic);
   else if(topic.id==='tensor-parallel')this.tp(f);
   else if(topic.id==='sequence-parallel'||topic.id==='context-parallel')this.sequence(f,topic.id==='context-parallel');
   else if(topic.id==='hybrid-parallel')this.hybrid(f);
   else this.memory(f,topic);
   const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;this.started=performance.now();this.tween=!reduced;
   for(const [id,m]of this.meshes){const previous=old.get(id);m.userData.start=previous?.pos||m.position.clone().add(new THREE.Vector3(0,.32,0));m.userData.end=m.position.clone();m.userData.startColor=previous?.color||m.material.color.clone();m.userData.endColor=m.material.color.clone();}
-  const note=document.querySelector('#spatial-note');if(note)note.textContent=this.note;this.selected=null;this.updateAccessibleState();
-  const inspector=document.querySelector('#spatial-inspector');if(inspector)inspector.textContent=tr(MT('Select a tensor tile to inspect its ownership and value.','选择张量色块，查看其所有权与数值。'));
+  const note=this.host.querySelector('[data-spatial-note],#spatial-note');if(note)note.textContent=this.note;this.selected=null;this.updateAccessibleState();
+  const inspector=this.host.querySelector('[data-spatial-inspector],#spatial-inspector');if(inspector)inspector.textContent=tr(MT('Select a tensor tile to inspect its ownership and value.','选择张量色块，查看其所有权与数值。'));
  }
- ranks(f,t){const pos=[[-2.25,0,-1.55],[2.25,0,-1.55],[2.25,0,1.55],[-2.25,0,1.55]];
-  for(let r=0;r<4;r++){const [x,y,z]=pos[r];this.plate(r,x,z);const row=f.values[r]||[];this.grid('r'+r,[row],x,.28,z,SPATIAL_COLORS[r],MT('Local buffer on rank '+r,'rank '+r+' 的本地缓冲'),.58,(_,c)=>{const raw=row[c];return raw&&typeof raw==='object'?raw.color:c%4;});}
-  for(const e of f.edges||[]){const a=pos[e.from],b=pos[e.to];this.route([a[0],.6,a[2]],[b[0],.6,b[2]],e.from,e.to);}
-  this.note=MT('Platforms are ranks. Tile color identifies a tensor shard; numbers are the current step’s buffer values. Arrows show this round’s transfers.','平台代表 rank，色块代表张量分片，数值为当前步骤缓冲值；箭头为本轮传输。');
+ valueTile(id,value,pos,color=SPATIAL_COLORS[0],info=''){
+  const mesh=this.box(id,...pos,.62,.18,.48,color,info||String(value));const label=this.label(String(value),pos[0],pos[1]+.35,pos[2],.6);return {mesh,label};
  }
+ payload(id,value,start,end,color=SPATIAL_COLORS[0]){
+  const tile=this.valueTile(id,value,start,color,MT('Transferred value: '+value,'传输值：'+value));this.payloads.push({...tile,start:new THREE.Vector3(...start),end:new THREE.Vector3(...end)});return tile;
+ }
+ reveal(tile,at=.75){this.reveals.push({...tile,at});}
+ calculation(f){
+  this.target.set(0,.4,0);
+  const rows=[-2.5,-.85,.85,2.5],position=(side,r,c)=>[(side==='input'?-3.4:3.4)+(c-1.5)*.64,.28,rows[r]];
+  for(const [side,data]of [['input',f.inputs],['output',f.outputs]])for(let r=0;r<4;r++){
+   const x=side==='input'?-3.4:3.4,z=rows[r];this.box(side+r,x,-.03,z,3.05,.12,1.1,this.dark?0x263244:0xe1e8f2,side+' R'+r);
+   this.label('R'+r,x-.0,.2,z+.56,.55);
+   data[r].forEach((raw,c)=>{const value=raw&&typeof raw==='object'?raw.text:raw,p=position(side,r,c);const tile=this.valueTile(side+'-'+r+'-'+c,value??'·',p,SPATIAL_COLORS[(raw&&typeof raw==='object'?raw.color:['all-gather','gather'].includes(f.id)&&side==='input'?r:c)%4],side+' R'+r+'['+c+'] = '+(value??'∅'));
+    if(value==null)tile.mesh.material.opacity=.2;
+    if(side==='output'&&f.transfer?.to===r&&(f.transfer.destColumn??f.transfer.column)===c)this.reveal(tile);
+   });
+  }
+  this.label(MT('INPUTS','输入'),-3.4,.6,-3.35,.8);this.label(MT('OUTPUTS','输出'),3.4,.6,-3.35,.8);
+  if(f.arithmetic){const a=f.arithmetic;
+   this.valueTile('oldsum',a.previous,[-.8,.65,-.1],SPATIAL_COLORS[1]);this.label('+',0,.95,-.1,.8);
+   const incoming=this.valueTile('operand',a.value,[.8,.65,-.1],SPATIAL_COLORS[a.column%4]);this.reveal(incoming,.55);
+   this.payload('contribution',a.value,position('input',a.rank,a.column),[.8,.65,-.1],SPATIAL_COLORS[a.column%4]);
+   this.label('=',0,.95,1.05,.85);const result=this.valueTile('sum',a.result,[0,.65,1.9],SPATIAL_COLORS[3]);this.reveal(result,.75);
+   this.label(MT('old sum + R'+a.rank+'['+a.column+']','旧和 + R'+a.rank+'['+a.column+']'),0,1.7,-1.4,.65);
+  }else if(f.transfer){const t=f.transfer,start=t.from==='sum'?[0,.65,0]:position('input',t.from,t.column);
+   if(t.from==='sum')this.valueTile('completed',t.value,start,SPATIAL_COLORS[3]);
+   this.payload('copy',t.value,start,position('output',t.to,t.destColumn??t.column),SPATIAL_COLORS[t.column%4]);
+   this.label(MT('COPY · same value','复制 · 数值不变'),0,1.5,0,.65);
+  }else this.label(f.id==='barrier'?'✓':'['+f.entry+']',0,1,0,1.1);
+  this.note=f.text;
+ }
+ ranks(f,t){const pos=[[-2.25,0,-1.55],[2.25,0,-1.55],[2.25,0,1.55],[-2.25,0,1.55]],previous=state.frames[Math.max(0,state.frame-1)];
+  const slots=new Map();
+  for(let r=0;r<4;r++){const [x,y,z]=pos[r];this.plate(r,x,z);const row=f.values[r]||[];
+   row.forEach((raw,c)=>{const value=raw&&typeof raw==='object'?raw.text:raw,color=SPATIAL_COLORS[(raw&&typeof raw==='object'?raw.color:c)%4];const tile=this.valueTile('r'+r+'-'+c,value??'·',[x+(c-(row.length-1)/2)*.6,.28,z],color,MT('Rank '+r+' buffer ['+c+'] = '+(value??'∅'),'rank '+r+' 缓冲 ['+c+'] = '+(value??'∅')));if(value==null)tile.mesh.material.opacity=.2;slots.set(r+':'+c,tile);});
+  }
+  let shown=0;
+  for(const edge of f.edges||[]){
+   const reduce=/REDUCE|SUM AT|PARTIAL SUMS|PREFIX|GROW THE/.test(f.center)&&!['all-gather','gather'].includes(t.id),explicit=edge.label?.match(/shard (\d+)/),source=(['all-to-all','all-to-all-v'].includes(t.id)?state.frames[0]:previous)?.values[edge.from]||[];
+   let cols=explicit?[Number(explicit[1])]:source.map((_,i)=>i);
+   if(['all-to-all','all-to-all-v'].includes(t.id))cols=[edge.to];
+   for(const c of cols){if(shown>=12)break;const raw=source[c],value=raw&&typeof raw==='object'?raw.text:raw;if(value==null)continue;
+    const dc=['all-to-all','all-to-all-v'].includes(t.id)?edge.from:c,dest=slots.get(edge.to+':'+dc);if(!dest)continue;
+    const resultRaw=f.values[edge.to]?.[dc],result=resultRaw&&typeof resultRaw==='object'?resultRaw.text:resultRaw,old=previous.values[edge.to]?.[dc];
+    // Derive each operation from the algorithm's prior snapshot, never a guessed sum.
+    const added=reduce&&typeof value==='number'&&typeof old==='number'&&result===old+value;
+    if(result==null||(!added&&JSON.stringify(resultRaw)===JSON.stringify(previous.values[edge.to]?.[dc])))continue;
+    const a=pos[edge.from],b=pos[edge.to];this.payload('payload'+shown,value,[a[0]+(c-(source.length-1)/2)*.6,.65,a[2]],[b[0]+(dc-(f.values[edge.to].length-1)/2)*.6,.65,b[2]],SPATIAL_COLORS[c%4]);this.reveal(dest);
+    if(added){this.label(old+' + '+value+' = '+result,b[0],1.45+(shown%2)*.45,b[2],.65);dest.mesh.userData.info+='; '+old+' + '+value+' = '+result;}
+    shown++;
+   }
+  }
+  this.note=shown?MT('Numbered tiles carry the previous round’s values. A receiver reveals its result after delivery; displayed additions use its old local value.','编号色块携带上一轮的值；接收方在送达后显示结果，所示加法使用其旧本地值。'):f.text;
+ }
+
  tp(f){const col=f.variant==='Column-parallel',pair=f.variant==='Column → row MLP',st=f.stage,back=st===(pair?5:4);const coords=[-2.2,2.2];
   for(let r=0;r<2;r++){const x=coords[r];this.plate(r,x,.15,0,2.2);const weight=col||pair?(r===0?[[1],[2]]:[[3],[4]]):(r===0?[[1,3]]:[[2,4]]);
    this.grid('weight'+r,weight,x-(pair?.7:0),.32,-.10,SPATIAL_COLORS[r],MT('Weight shard W'+r,'权重分片 W'+r),.62);this.label(MT((pair?'W₁ col ':col?'W · column ':'W · row ')+r,(pair?'W₁ 列 ':col?'W · 列 ':'W · 行 ')+r),x-(pair?.7:0),1.3,-.65,.66);if(pair){this.grid('w2'+r,[[1]],x+.75,.32,0,SPATIAL_COLORS[r],'W₂ row '+r,.45);this.label(MT('W₂ row '+r,'W₂ 行 '+r),x+.75,1.05,.3,.5);}
@@ -94,21 +146,25 @@ class TensorSpace{
   this.note=t.id==='zero'?MT('Three stacked rows: P = parameters, G = gradients, O = optimizer. This view shows persistent allocation, not peak or transient buffers.','三层色块：P 参数、G 梯度、O 优化器；本视图展示常驻分配，不代表峰值或临时缓冲。'):MT('P = parameters, G = gradients, O = optimizer. Full parameter rows appear only in the illustrated gather/compute phases. Activations are omitted.','P 参数、G 梯度、O 优化器；完整参数行只在图示收集 / 计算阶段出现，激活未画出。');
  }
  updateAccessibleState(){
-  const host=document.querySelector('#spatial-data');if(!host)return;
+  const host=this.host.querySelector('[data-spatial-data],#spatial-data');if(!host)return;
   const entries=[...this.meshes.values()].filter(m=>!m.userData.id.startsWith('rank')).map(m=>m.userData.info);
   host.innerHTML=entries.map(info=>'<li>'+esc(tr(info))+'</li>').join('');
  }
  pick(ev){const rect=this.renderer.domElement.getBoundingClientRect(),mouse=new THREE.Vector2((ev.clientX-rect.left)/rect.width*2-1,-(ev.clientY-rect.top)/rect.height*2+1),ray=new THREE.Raycaster();ray.setFromCamera(mouse,this.camera);const hit=ray.intersectObjects([...this.meshes.values()],false)[0];if(!hit)return;
-  const inspector=document.querySelector('#spatial-inspector');if(inspector){inspector.textContent=tr(hit.object.userData.info);inspector.classList.add('has-selection');}
+  const inspector=this.host.querySelector('[data-spatial-inspector],#spatial-inspector');if(inspector){inspector.textContent=tr(hit.object.userData.info);inspector.classList.add('has-selection');}
   if(this.selected)this.selected.material.emissive.setHex(0);this.selected=hit.object;this.selected.material.emissive.setHex(0x173e65);
  }
  tick(){if(!this.host||!this.renderer)return;const now=performance.now(),p=this.tween?Math.min(1,(now-this.started)/650):1,e=1-(1-p)**3;
   for(const m of this.meshes.values()){const d=m.userData;if(d.start){m.position.lerpVectors(d.start,d.end,e);m.material.color.copy(d.startColor).lerp(d.endColor,e);}}
-  const moving=state.playing&&!document.hidden&&!matchMedia('(prefers-reduced-motion: reduce)').matches;for(let i=0;i<this.routes.length;i++){const r=this.routes[i];r.packet.visible=moving;if(moving)r.packet.position.copy(r.curve.getPoint(((now*.00045*state.speed+i*.19)%1)));}
+  const moving=(this.logical?logicState.playing:state.playing)&&!document.hidden&&!matchMedia('(prefers-reduced-motion: reduce)').matches;for(let i=0;i<this.routes.length;i++){const r=this.routes[i];r.packet.visible=moving;if(moving)r.packet.position.copy(r.curve.getPoint(((now*.00045*state.speed+i*.19)%1)));}
+  const calculationProgress=matchMedia('(prefers-reduced-motion: reduce)').matches?1:Math.min(1,(now-this.started)/2400);
+  for(const tile of this.payloads){const q=Math.min(1,calculationProgress/.68),point=new THREE.Vector3().lerpVectors(tile.start,tile.end,q);point.y+=Math.sin(q*Math.PI)*.85;tile.mesh.position.copy(point);tile.mesh.visible=calculationProgress<.78;tile.label.visible=tile.mesh.visible;tile.label.position.copy(point).add(new THREE.Vector3(0,.35,0));}
+  for(const tile of this.reveals){const show=calculationProgress>=tile.at;tile.mesh.visible=show;tile.label.visible=show;}
   const radius=this.distance,ce=Math.cos(this.elevation);this.camera.position.set(Math.sin(this.angle)*radius*ce,Math.sin(this.elevation)*radius,Math.cos(this.angle)*radius*ce);this.camera.lookAt(this.target);
-  const signature=[this.key,this.angle,this.elevation,this.distance,this.host.clientWidth,this.host.clientHeight,this.selected?.uuid].join('|');if(!document.hidden&&this.host.offsetParent!==null&&(moving||p<1||signature!==this.rendered)){this.renderer.render(this.scene,this.camera);this.rendered=signature;}this.raf=requestAnimationFrame(()=>this.tick());
+  const signature=[this.key,this.angle,this.elevation,this.distance,this.host.clientWidth,this.host.clientHeight,this.selected?.uuid].join('|');if(!document.hidden&&this.host.offsetParent!==null&&(moving||p<1||(this.payloads.length&&calculationProgress<1)||signature!==this.rendered)){this.renderer.render(this.scene,this.camera);this.rendered=signature;}this.raf=requestAnimationFrame(()=>this.tick());
  }
  reset(){this.angle=.57;this.elevation=.68;const framing=state.topic.id==='tensor-parallel'?1.25:1.44;this.distance=12*Math.max(1,framing/(this.fitAspect||framing));this.rendered='';}
  zoom(delta){this.distance=Math.max(7,Math.min(40,this.distance+delta));}
 }
 const tensorSpace=new TensorSpace();
+const semanticSpace=new TensorSpace(true);

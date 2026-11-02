@@ -1,0 +1,18 @@
+{
+  "presentations": 2212,
+  "widths": [
+    320,
+    390,
+    700,
+    768,
+    1024,
+    1440,
+    1920
+  ],
+  "topics": 79,
+  "languages": 2,
+  "themes": 2,
+  "issues": [],
+  "errors": [],
+  "lateTranslationAndStatePreservation": "passed"
+}

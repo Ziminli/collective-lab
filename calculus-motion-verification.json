@@ -1,0 +1,12 @@
+{
+  "arithmeticBeforeResult": "passed",
+  "copyBeforeOutputReveal": "passed",
+  "numberedRingPayloads": 4,
+  "receiverArithmetic": "passed",
+  "mobileCanvasAfterResize": "passed",
+  "reducedMotion": "passed",
+  "webglFallback": "passed",
+  "multiplyAccumulateReplay": "passed",
+  "playbackWaitsForArithmetic": "passed",
+  "errors": []
+}

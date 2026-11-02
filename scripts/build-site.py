@@ -34,7 +34,7 @@ def main():
     parser.feed((ROOT / 'index.html').read_text(encoding='utf-8'))
     required = {'styles.css', 'content.js', 'lessons.js', 'animations.js',
                 'tensor-views.js', 'semantics.js', 'zh.js', 'pipeline-plans.js',
-                'vendor/three.min.js', 'teaching-content.js', 'teaching.js', 'spatial.js', 'motion.js', 'experiments.js', 'studio.css',
+                'vendor/three.min.js', 'teaching-content.js', 'teaching.js', 'spatial.js', 'motion.js', 'experiments.js', 'studio.css', 'calculus.css', 'operator-workbench.js',
                 'pipeline.js', 'model-content.js', 'model-views.js', 'model.css', 'app.js', 'preferences.js'}
     if parser.assets != required:
         raise ValueError(f'Unexpected asset manifest: {parser.assets ^ required}')

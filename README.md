@@ -28,7 +28,10 @@ Each communication page first animates its abstract input/output contract, then 
 
 Every topic starts with an input → change → result explanation and ends with a conceptual self-check. Read the idea, follow the data one step at a time, then predict what changes when an input changes.
 
-- **Continuous motion:** logical data transformations, matrix transitions, and moving transfer indicators connect successive states. Playback leaves time to read each explanation.
+- **Arithmetic before algorithms:** choose a tensor position and watch individual values form a running sum, then copy the finished result to its owners. Inputs and output buffers stay separate. The same example has 2D and 3D views; implementation views carry numbered payloads and show receiver arithmetic.
+- **Explicit operator contracts:** every operator shows input/output shapes, intermediate/state shapes, an equation, and a replayable numerical calculation. Select a result cell to follow its multiply–accumulate terms. Playback waits for the calculation.
+- **MLA end to end:** ten stages derive content/query compression, separate RoPE features, persistent cache tensors, per-head scores, matrix absorption, softmax, latent readout and output projection. Choose either head and compare compact versus expanded cache accounting.
+- **Continuous motion:** matrix transitions and moving numerical terms connect successive states. Playback leaves time to read each explanation.
 - **Step navigator:** select a named stage directly, scrub the trace, or expand the canvas. Escape closes the expanded view.
 - **Tensor inspection:** click a matrix/buffer cell, or focus it and press Enter, to read its coordinates, value and meaning.
 - **Live calculations:** communication, tensor parallelism and all 18 key operators have parameter experiments. Change a contribution, query feature, norm offset, recurrent gate or other input; the example recomputes its output.
@@ -73,7 +76,10 @@ For model-specific source and example conventions, see [model-notes.md](model-no
 - `pipeline-plans.js`: generated dependency-checked example traces.
 - `pipeline-notes.md`: schedule model, limitations, and reference provenance.
 - `tensor-views.js`: numerical TP matrices, SP activation layouts, and CP attention masks.
-- `semantics.js`: abstract input/output traces and logical animations.
+- `semantics.js`: entry-by-entry arithmetic/copy contracts and logical animations.
+- `operator-workbench.js`: executable MLA example, operator shape/equation contracts and numerical replays.
+- `calculus.css`: computation panels, desktop side-by-side explanations and responsive MLA presentation.
+- `scripts/verify-calculations.cjs`: dependency-free collective/operator numerical assertions, also run in CI.
 - `app.js`: routing, playback, search, and interaction.
 - `zh.js`: Chinese explanations, controls, and animation translations.
 - `preferences.js`: language/theme controls, preference persistence, and SVG contrast handling.
@@ -94,6 +100,8 @@ For model-specific source and example conventions, see [model-notes.md](model-no
 - `verification.json`: completed browser verification results.
 
 ## Verification
+
+The computation revision is checked in `calculus-verification.json`, `calculus-layout-verification.json` and `calculus-motion-verification.json`. It checks all 79 routes, 2,196 model/operator frames, 266 logical collective frames, independently specified MLA outputs and the algebraic equivalence of both attention paths. Run `node scripts/verify-calculations.cjs` for 457 dependency-free assertions covering all 12 collectives and 18 operators. Earlier studio audits below describe their own revision; the calculus reports cover the changed views.
 
 The visual studio is checked separately for all-topic teaching contracts, selected-view explanations, numerical experiments, matrix inspection, camera controls, expanded views, reduced motion and WebGL fallback. Its responsive audit covers all 79 topics in both languages and themes at seven widths. Numerical operator checks independently compare attention gradients, recurrence and other worked calculations. See `studio-verification.json` and `visual-verification.json` for the current measured counts.
 
