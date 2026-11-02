@@ -8,7 +8,7 @@ An illustrated, technically detailed field guide to distributed deep learning. O
 python3 serve.py
 ```
 
-Then open http://localhost:8847. On Windows, `python serve.py` or `py serve.py` also works if Python is installed. No build, package manager, API key, or application dependencies are required.
+Then open http://localhost:8847. On Windows, `python serve.py` or `py serve.py` also works if Python is installed. No build, package manager, API key, or dependency installation is required. Three.js is bundled locally with its MIT license.
 
 ## What's inside
 
@@ -23,6 +23,19 @@ Each communication page first animates its abstract input/output contract, then 
 **Architectures (25):** 7 blueprints (Transformer, MoE, RWKV, state-space/Mamba, diffusion/flow, CNN and ViT) plus 18 key-operator pages. Transformer views compare decoder-only, encoder-only and encoder-decoder layouts. Numerical walkthroughs cover attention and head sharing, cross-attention, gated attention, FlashAttention, RoPE, normalization, FFNs, routing, MLA, sparse/compressed attention, mHC, SSMs, DeltaNet, RWKV state, convolution, diffusion updates, cross-layer KV reuse, Engram and speculative decoding.
 
 **Models (24):** DeepSeek V2/V3/V3.1/V3.2/V4/V4.1/R1; Qwen2.5/3 dense/3 MoE/3-Next/3.5/3.8; Llama 2/3.1/4; GPT-2/3/gpt-oss and documented hosted-GPT scope; RWKV-7, Mamba-2, Stable Diffusion v1.5 and FLUX.1. Model pages show reference-checkpoint dimensions, family comparisons, operator chips and training/inference differences. Undisclosed hosted-model internals are identified explicitly.
+
+## Visual learning studio
+
+Every topic starts with an input → change → result explanation and ends with a conceptual self-check. Read the idea, follow the data one step at a time, then predict what changes when an input changes.
+
+- **Continuous motion:** logical data transformations, matrix transitions, and moving transfer indicators connect successive states. Playback leaves time to read each explanation.
+- **Step navigator:** select a named stage directly, scrub the trace, or expand the canvas. Escape closes the expanded view.
+- **Tensor inspection:** click a matrix/buffer cell, or focus it and press Enter, to read its coordinates, value and meaning.
+- **Live calculations:** communication, tensor parallelism and all 18 key operators have parameter experiments. Change a contribution, query feature, norm offset, recurrent gate or other input; the example recomputes its output.
+- **GPU & tensor space:** an optional Three.js view on 18 topics shows actual buffer/shard ownership, current numerical values and transfer directions. Drag to rotate, zoom, reset, select a tile, or open its text data inventory. The detailed 2D view remains available.
+- **Consistent presentation:** larger canvases, blue accents, neutral/navy dark appearance, bilingual explanations and mobile layouts.
+
+Three.js 0.160.0 is pinned in `vendor/`; the site makes no runtime CDN request. If WebGL is unavailable, the complete 2D view remains usable. Animation respects reduced motion and stops in background tabs. The spatial view illustrates ownership and dependencies, not real GPU placement or measured timing.
 
 ## Controls
 
@@ -68,11 +81,22 @@ For model-specific source and example conventions, see [model-notes.md](model-no
 - `model-content.js`: bilingual model curriculum, checkpoint facts and source links.
 - `model-views.js`: architecture/operator view selection and numerical SVG traces.
 - `model.css`: model navigation, fact strips and diagrams.
+- `studio.css`: shared visual studio layout and responsive/theme styles.
+- `teaching-content.js`: bilingual input/action/result contracts and self-checks.
+- `teaching.js`: step navigation, concept questions, canvas controls and data inspection.
+- `motion.js`: SVG state transitions and moving computation indicators.
+- `experiments.js`: live numerical parameter experiments.
+- `spatial.js`: disposable Three.js tensor/buffer views and camera interaction.
+- `vendor/three.min.js`, `vendor/three.LICENSE`: pinned local Three.js runtime and license.
+- `studio-verification.json`, `visual-verification.json`: visual studio interaction and layout checks.
 - `model-notes.md`: example conventions, checkpoint scope and technical limits.
 - `model-sources.json`: dated source URLs and downloaded-source fingerprints.
 - `verification.json`: completed browser verification results.
 
 ## Verification
+
+The visual studio is checked separately for all-topic teaching contracts, selected-view explanations, numerical experiments, matrix inspection, camera controls, expanded views, reduced motion and WebGL fallback. Its responsive audit covers all 79 topics in both languages and themes at seven widths. Numerical operator checks independently compare attention gradients, recurrence and other worked calculations. See `studio-verification.json` and `visual-verification.json` for the current measured counts.
+
 
 The original distributed curriculum checks cover all 30 original topics, 63 algorithm/layout/mode configurations, both languages and themes (252 presentations), 2,876 implementation-frame presentations, and 240 logical-frame presentations. All topics were checked at widths 1920, 1440, 1024, 768, 700, 390, and 320 pixels in each language/theme combination. Preference persistence, state preservation, Chinese search, accessible labels, direct-file use, blocked-storage fallback, and matrix arithmetic were verified. The expanded 79-topic curriculum passed 1,700 view/language/theme presentations, 11,372 implementation-frame presentations and all 28 language/theme/width combinations. Independent numerical checks cover attention and gradients, RoPE, normalization, routing, mHC, DeltaNet/RWKV state, convolutions, diffusion updates and conditional memory. Mode-specific structure graphs and the GitHub Pages project path were also verified. See `verification.json`.
 

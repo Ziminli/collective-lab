@@ -70,16 +70,16 @@ function updatePreferenceControls(){
  const toggle=document.getElementById('theme-toggle'),title=dark?'Switch to light mode':'Switch to dark mode';
  toggle.setAttribute('aria-pressed',String(dark));toggle.setAttribute('aria-label',title);toggle.title=title;
  toggle.innerHTML=dark?'<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z"/></svg>';
- document.querySelector('meta[name="theme-color"]').content=dark?'#111214':'#f6f8f5';
+ document.querySelector('meta[name="theme-color"]').content=dark?'#10141d':'#f5f7fc';
 }
 function setLanguage(lang){
  document.documentElement.lang=lang==='zh'?'zh-CN':'en';savePreference('collective-language',lang);
- updatePreferenceControls();renderNav(document.getElementById('search').value);localizePage();
+ updatePreferenceControls();renderNav(document.getElementById('search').value);localizePage();if(studioState.view==='space'&&tensorSpace.host)tensorSpace.update(state.frames[state.frame],state.topic,true);
 }
 let themeExplicit=false;try{themeExplicit=!!localStorage.getItem('collective-theme');}catch{}
 function setTheme(theme,persist=true){
  document.documentElement.dataset.theme=theme;if(persist){themeExplicit=true;savePreference('collective-theme',theme);}
- updatePreferenceControls();localizePage();
+ updatePreferenceControls();localizePage();if(studioState.view==='space'&&tensorSpace.host)tensorSpace.update(state.frames[state.frame],state.topic,true);
 }
 ZH['Switch to light mode']='切换浅色模式';ZH['Switch to dark mode']='切换深色模式';
 for(const lang of ['en','zh'])document.getElementById('language-'+lang).addEventListener('click',()=>setLanguage(lang));

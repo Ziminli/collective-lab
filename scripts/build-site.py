@@ -1,4 +1,4 @@
-"""Validate and assemble a dependency-free GitHub Pages artifact."""
+"""Validate and assemble a self-contained GitHub Pages artifact."""
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
@@ -34,15 +34,17 @@ def main():
     parser.feed((ROOT / 'index.html').read_text(encoding='utf-8'))
     required = {'styles.css', 'content.js', 'lessons.js', 'animations.js',
                 'tensor-views.js', 'semantics.js', 'zh.js', 'pipeline-plans.js',
+                'vendor/three.min.js', 'teaching-content.js', 'teaching.js', 'spatial.js', 'motion.js', 'experiments.js', 'studio.css',
                 'pipeline.js', 'model-content.js', 'model-views.js', 'model.css', 'app.js', 'preferences.js'}
     if parser.assets != required:
         raise ValueError(f'Unexpected asset manifest: {parser.assets ^ required}')
     DEST.mkdir(exist_ok=True)
     # Limit deployment to public site assets; repository metadata and tooling stay out.
-    for asset in sorted(required | {'index.html', 'pipeline-notes.md', 'model-notes.md', 'model-sources.json'}):
+    for asset in sorted(required | {'index.html', 'pipeline-notes.md', 'model-notes.md', 'model-sources.json', 'vendor/three.LICENSE'}):
+        (DEST / asset).parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / asset, DEST / asset)
     (DEST / '.nojekyll').touch()
-    print(f'Validated and assembled {len(required) + 5} files in {DEST}')
+    print(f'Validated and assembled {len(required) + 6} files in {DEST}')
 
 
 if __name__ == '__main__':

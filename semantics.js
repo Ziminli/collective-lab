@@ -33,28 +33,47 @@ function semanticFrames(topic){
 }
 function semanticSVG(frame){
  const compact=matchMedia('(max-width:700px)').matches,st=frame.stage;let s='';
- const node=(x,y,values,r,defined)=>{
+ const node=(x,y,values,r,defined,side='input')=>{
   let out=rectSVG(x,y,265,52,'#fff','class="node-shell"')+textSVG(x+13,y+20,'R'+r,'class="node-label" style="font-size:11px"');
   if(!defined)out+=textSVG(x+154,y+31,'no defined output','text-anchor="middle" style="font-size:11px;fill:#7e8974"');
   else out+=cellRow(x+53,y+11,values,199);
-  return out;
+  return `<g data-logical-side="${side}" data-rank="${r}">${out}</g>`;
  };
  const rootOnly=['reduce','gather'].includes(frame.id),receiveOnly=frame.id==='send-recv';
  const defined=r=>!rootOnly&&!receiveOnly||rootOnly&&r===0||receiveOnly&&r===2;
  if(compact){
   s+=label(210,30,st===2?'DEFINED OUTPUTS':'INPUTS ON FOUR RANKS');
-  for(let r=0;r<4;r++)s+=node(77,54+r*65,st===2?frame.outputs[r]:frame.inputs[r],r,st===2?defined(r):true);
-  s+=rectSVG(77,330,265,60,st===1?'#e4efd6':'#f0f4e7','stroke="#d8e4c9"')+textSVG(105,368,frame.operator,'style="font-size:28px;fill:#527b3d"')+textSVG(235,365,frame.action,'text-anchor="middle" class="mono" style="font-size:9px;fill:#5c7646"');
+  for(let r=0;r<4;r++)s+=node(77,54+r*65,st===2?frame.outputs[r]:frame.inputs[r],r,st===2?defined(r):true,st===2?'output':'input');
+  s+=rectSVG(77,330,265,60,st===1?'#dce5ff':'#edf1ff','stroke="#bccbf4"')+textSVG(105,368,frame.operator,'style="font-size:28px;fill:#4668d6"')+textSVG(235,365,frame.action,'text-anchor="middle" class="mono" style="font-size:9px;fill:#64729b"');
  }else{
   s+=label(157,29,'INPUTS')+label(683,29,st===2?'DEFINED OUTPUTS':'OUTPUTS AFTER THE OPERATION');
   for(let r=0;r<4;r++){
    s+=node(25,51+r*65,frame.inputs[r],r,true);
-   s+=`<g opacity="${st===2?1:.3}">`+node(550,51+r*65,st===2?frame.outputs[r]:[null,null,null,null],r,st===2?defined(r):true)+'</g>';
+   s+=`<g opacity="${st===2?1:.3}">`+node(550,51+r*65,st===2?frame.outputs[r]:[null,null,null,null],r,st===2?defined(r):true,'output')+'</g>';
    if(st===1)s+=pathSVG(`M 302 ${77+r*65} Q 326 ${77+r*65} 341 177`,true);
    if(st===2&&defined(r))s+=pathSVG(`M 499 177 Q 525 ${77+r*65} 538 ${77+r*65}`,true);
   }
-  s+=rectSVG(345,135,150,85,st===1?'#e4efd6':'#f0f4e7','stroke="#d8e4c9"')+textSVG(420,181,frame.operator,'text-anchor="middle" style="font-size:34px;fill:#527b3d"')+textSVG(420,205,frame.action,'text-anchor="middle" class="mono" style="font-size:8px;fill:#647a50"');
+  s+=rectSVG(345,135,150,85,st===1?'#dce5ff':'#edf1ff','stroke="#bccbf4"')+textSVG(420,181,frame.operator,'text-anchor="middle" style="font-size:34px;fill:#4668d6"')+textSVG(420,205,frame.action,'text-anchor="middle" class="mono" style="font-size:8px;fill:#64729b"');
   s+=label(420,337,'ABSTRACT TRANSFORMATION · NO NETWORK TOPOLOGY IMPLIED');
  }
- return `<svg class="semantic-scene" viewBox="${compact?'0 0 420 415':'0 0 840 360'}" role="img" aria-labelledby="semantic-title semantic-desc" xmlns="http://www.w3.org/2000/svg"><title id="semantic-title">${esc(frame.title)}</title><desc id="semantic-desc">${esc(frame.text)}</desc><defs><marker id="semantic-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#8aa376"/></marker></defs>${s.replaceAll('url(#arrowhead)','url(#semantic-arrow)')}</svg>`;
+ return `<svg class="semantic-scene" viewBox="${compact?'0 0 420 415':'0 0 840 360'}" role="img" aria-labelledby="semantic-title semantic-desc" xmlns="http://www.w3.org/2000/svg"><title id="semantic-title">${esc(frame.title)}</title><desc id="semantic-desc">${esc(frame.text)}</desc><defs><marker id="semantic-arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7" fill="none" stroke="#7890ce"/></marker></defs>${s.replaceAll('url(#arrowhead)','url(#semantic-arrow)')}</svg>`;
+}
+
+/* Animate the abstract data transformation without implying a network algorithm. */
+function animateLogicalData(frame){
+ if(motionReduced()||frame.id==='barrier')return;const svg=document.querySelector('#semantic-diagram svg');if(!svg)return;
+ const compact=matchMedia('(max-width:700px)').matches,cx=compact?210:420,cy=compact?355:178;
+ if(frame.stage===1){
+  for(const group of svg.querySelectorAll('[data-logical-side="input"]')){
+   const row=Number(group.dataset.rank);[...group.querySelectorAll('rect')].slice(1).forEach((cell,col)=>{
+    if(cell.hasAttribute('stroke-dasharray'))return;const tile=cell.cloneNode(true),ns='http://www.w3.org/2000/svg',g=document.createElementNS(ns,'g');g.style.pointerEvents='none';g.append(tile);const txt=group.querySelectorAll('.cell-text')[col]?.cloneNode(true);if(txt)g.append(txt);svg.append(g);
+    const x=Number(cell.getAttribute('x'))+Number(cell.getAttribute('width'))/2,y=Number(cell.getAttribute('y'))+15;
+    g.animate([{transform:'translate(0,0)',opacity:.95},{transform:`translate(${cx-x}px,${cy-y}px) scale(0.7)`,opacity:0}],{duration:1600,delay:row*130+col*90,iterations:logicState.playing?Infinity:1,iterationStart:0,easing:'cubic-bezier(.4,0,.2,1)'});
+   });
+  }
+ }else if(frame.stage===2){
+  for(const group of svg.querySelectorAll('[data-logical-side="output"]')){
+   const row=Number(group.dataset.rank);[...group.querySelectorAll('rect')].slice(1).forEach((cell,col)=>{const x=Number(cell.getAttribute('x'))+Number(cell.getAttribute('width'))/2,y=Number(cell.getAttribute('y'))+15;cell.animate([{transform:`translate(${cx-x}px,${cy-y}px)`,opacity:.1},{transform:'translate(0,0)',opacity:1}],{duration:1000,delay:row*90+col*60,easing:'cubic-bezier(.2,.8,.2,1)',fill:'backwards'});});
+  }
+ }
 }

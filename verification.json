@@ -1,5 +1,5 @@
 {
-  "edition": 5,
+  "edition": 6,
   "date": "2026-10-30",
   "topics": 79,
   "variants": 425,
@@ -372,5 +372,35 @@
     "scopeNotes": "model-notes.md",
     "sourceEvidence": "model-sources.json"
   },
-  "responsiveAllTopics": 79
+  "responsiveAllTopics": 79,
+  "visualStudio": {
+    "date": "2026-11-02",
+    "interactionReport": "studio-verification.json",
+    "layoutReport": "visual-verification.json",
+    "renderer": "Three.js 0.160.0, locally bundled",
+    "topicGuides": 79,
+    "spatialTopics": 18,
+    "spatialConfigurations": 56,
+    "spatialFrames": 228,
+    "viewLanguageThemePresentations": 1780,
+    "responsiveRouteChecks": 2212,
+    "operatorNumericalChecks": [
+      "dense attention and normalized weights",
+      "online tiled attention equals dense attention",
+      "attention backward finite differences",
+      "RMSNorm, LayerNorm and GroupNorm statistics",
+      "RoPE norm-preserving joint rotation and changed relative-position score",
+      "attention output gating",
+      "top-k expert combine weights",
+      "mHC mixing and stochastic constraints",
+      "DeltaNet sequential prediction/error updates",
+      "RWKV-6/7 distinct recurrence terms",
+      "2D convolution and causal channelwise convolution",
+      "diffusion reconstruction and constant-velocity Euler trajectory",
+      "conditional-memory gate and fusion",
+      "language/theme preserve selected operator and animation state",
+      "preference persistence",
+      "mobile cross-attention and Chinese controls"
+    ]
+  }
 }

@@ -1,0 +1,29 @@
+{
+  "date": "2026-11-02",
+  "topics": 79,
+  "languages": [
+    "en",
+    "zh"
+  ],
+  "themes": [
+    "light",
+    "dark"
+  ],
+  "viewPresentations": 1780,
+  "firstAndLastFramePresentations": 3560,
+  "responsiveRouteChecks": 2212,
+  "widths": [
+    1920,
+    1440,
+    1024,
+    768,
+    700,
+    390,
+    320
+  ],
+  "selectionAwareExplanations": "passed",
+  "stepRailAndGuides": "passed",
+  "documentOverflow": "none",
+  "headerControls": "passed",
+  "browserErrors": []
+}

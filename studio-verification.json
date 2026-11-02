@@ -1,0 +1,31 @@
+{
+  "date": "2026-11-02",
+  "guides": 79,
+  "experimentTopics": 59,
+  "spatialTopics": 18,
+  "spatialConfigurations": 56,
+  "spatialFrames": 228,
+  "checks": [
+    "All 79 topic introductions and self-check contracts; all selected views build",
+    "AllReduce recomputes scalar sum",
+    "Row and column TP agree on XW",
+    "LayerNorm invariant to common offset",
+    "DeltaNet beta endpoints preserve/write prediction",
+    "Attention probabilities and output recompute",
+    "Self-check feedback and correct answer reveal",
+    "Mouse and keyboard tensor-value inspection",
+    "Three.js data, geometry and accessible tensor inventory across all supported topics",
+    "3D language/theme preserve data and progress",
+    "Camera drag, zoom and reset",
+    "Expanded canvas, Escape, renderer detach",
+    "Desktop and mobile visual review artifacts",
+    "Continuous logical motion and spatial transfers without page jumps",
+    "Reduced-motion preference",
+    "Unavailable WebGL falls back to complete 2D view",
+    "Raycast tile selection and Chinese inspector",
+    "Live reduced-motion preference change pauses playback",
+    "Buffer inspection and keyboard event handling",
+    "Nonblank WebGL canvas after resize and expanded-view exit"
+  ],
+  "browserErrors": []
+}

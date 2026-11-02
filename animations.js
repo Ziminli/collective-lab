@@ -1,4 +1,4 @@
-const PALETTE = ['#cce4d9','#d6e1f3','#f0ddc4','#e4d8ee'];
+const PALETTE = ['#cce6fa','#ded3f4','#f4dfba','#c8e9df'];
 const DARK = ['#48775f','#5c79aa','#a98051','#9476aa'];
 const clone = x => JSON.parse(JSON.stringify(x));
 const blank = () => Array.from({length:4},()=>[null,null,null,null]);
@@ -169,7 +169,7 @@ function renderRanks(frame){
  if(!frame.edges.length){s+=[rankEdge(0,1,false),rankEdge(1,2,false),rankEdge(2,3,false),rankEdge(3,0,false)].join('');}
  else s+=frame.edges.map(edge=>rankEdge(edge.from,edge.to)).join('');
  s+=`<g transform="${compact?'translate(-150 15)':''}"><circle cx="360" cy="182" r="34" fill="#f0f4e7" stroke="#e0e7d4"/>`+textSVG(360,192,frame.center.includes('SUM')?'Σ':frame.center.includes('COPY')?'⊞':frame.center.includes('BARRIER')?'✓':'⇄','text-anchor="middle" style="font-size:28px;fill:#63834c"')+textSVG(360,235,frame.center,'text-anchor="middle" class="diagram-label" style="font-size:8px"')+'</g>';
- for(let r=0;r<4;r++){let[x,y]=pos[r];s+=rectSVG(x,y,185,90,'white','class="node-shell"')+rectSVG(x+14,y+14,14,12,'#eef2e6','stroke="#b7c6a6" rx="2"')+`<path d="M ${x+18} ${y+12} v3 M ${x+24} ${y+12} v3 M ${x+18} ${y+25} v3 M ${x+24} ${y+25} v3" stroke="#b7c6a6"/>`+textSVG(x+37,y+25,'RANK '+r,'class="node-label"')+textSVG(x+169,y+25,'GPU','text-anchor="end" style="font-size:8px;fill:#a2ad96"')+cellRow(x+15,y+43,frame.values[r]);}
+ for(let r=0;r<4;r++){let[x,y]=pos[r];s+=rectSVG(x,y,185,90,'white','class="node-shell"')+rectSVG(x+14,y+14,14,12,'#eef2e6','stroke="#b7c6a6" rx="2"')+`<path d="M ${x+18} ${y+12} v3 M ${x+24} ${y+12} v3 M ${x+18} ${y+25} v3 M ${x+24} ${y+25} v3" stroke="#b7c6a6"/>`+textSVG(x+37,y+25,'RANK '+r,'class="node-label"')+textSVG(x+169,y+25,'GPU','text-anchor="end" style="font-size:8px;fill:#a2ad96"')+`<g data-rank-buffer="${r}">`+cellRow(x+15,y+43,frame.values[r])+'</g>';}
  return s;
 }
 function box(x,y,w,h,label,sub,active=false,color=0){return rectSVG(x,y,w,h,active?'#f2f7e8':'white',`class="node-shell ${active?'highlight-shell':''}"`)+rectSVG(x+12,y+12,21,20,PALETTE[color])+textSVG(x+22.5,y+26,String(color),'text-anchor="middle" class="mono" style="font-size:10px"')+textSVG(x+42,y+26,label,'style="font-size:11px;font-weight:600"')+(sub?textSVG(x+w/2,y+h-17,sub,'text-anchor="middle" class="mono" style="font-size:10px;fill:#89967b"'):'');}

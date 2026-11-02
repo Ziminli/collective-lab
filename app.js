@@ -29,6 +29,7 @@ function navigate(){
  clearTimeout(logicState.timer);state.playing=topic.section!=='communication'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
  state.topic=topic;state.frame=0;state.mode=topic.tags.includes('Training')?'Training':'Inference';
  state.algorithm=topicOptions(topic,state.mode)[0]||'';
+ tensorSpace.detach();document.body.classList.remove('studio-expanded-body');studioState.selection=null;
  $('#search').value='';renderNav();closeMobile();renderPage();
  document.title=`${topic.name} — Collective Lab`;
  document.querySelectorAll('.section-nav a').forEach(a=>{let active=a.dataset.section===topic.section;a.classList.toggle('active',active);active?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current');});
@@ -49,14 +50,19 @@ function renderPage(){
  $('#main').innerHTML=`
  <div class="breadcrumb"><span>The field guide</span><span class="slash">/</span><span>${section.title}</span><span class="slash">/</span><strong>${esc(t.name)}</strong><span class="breadcrumb-right"><span class="small-ring"></span> LEARN BY SEEING</span></div>
  <section class="hero" aria-labelledby="topic-title"><div class="hero-topline"><span class="hero-badge">${esc(t.badge)}</span><span class="topic-count">&nbsp; / &nbsp; ${String(index).padStart(2,'0')}</span></div><h1 id="topic-title">${esc(t.name)}<span style="color:#8ba86a">.</span></h1><p class="hero-lede">${esc(t.lede)}</p>${t.description!==t.lede?`<p class="hero-description">${esc(t.description)}</p>`:''}<div class="hero-bottom"><div class="scope-tags">${t.tags.map(tag=>`<span class="scope-tag">${tag}</span>`).join('')}</div><button class="share-button" id="share-link">${icons.link} Copy link</button></div></section>
+ ${teachingIntro(t)}
  ${t.section==='communication'?semanticPanel(t):t.curriculum?renderModelIntro(t):''}
  <div class="lesson-heading" id="implementation-heading"><h2>${t.section==='communication'?'<span>02</span> How it is implemented':t.curriculum?'Explore the structure and operators':'Explore the layout and schedule'}</h2><p>${t.section==='communication'?'Same logical result. Different schedules, traffic, and startup costs.':t.curriculum?'Select a structure or operator. Step through its data flow, then inspect the equations.':'Change the available layout, stage, or execution mode. The explanation follows your selection.'}</p></div>
  <div class="study-grid"><section class="visual-card" aria-label="Interactive ${esc(t.name)} implementation"><div class="visual-header"><div class="visual-heading"><span class="live-indicator"></span>${t.section==='communication'?'Implementation trace':'See it in motion'}</div><div class="visual-selectors">${select}${mode}${!select&&!mode?`<span class="mini-eyebrow">${t.tags[0].toUpperCase()}</span>`:''}</div></div>
- <div class="scene-wrap ${t.section==='communication'?'':'concept-view'}"><div class="scene-topline"><span id="scene-metadata"></span><span>LOGICAL STEPS · NOT TO SCALE</span></div><div id="diagram"></div><div class="legend" id="legend">${legend()}</div></div>
+ ${studioToolbar(t)}
+ <div class="scene-wrap ${t.section==='communication'?'':'concept-view'}"><div class="scene-topline"><span id="scene-metadata"></span><span>LOGICAL STEPS · NOT TO SCALE</span></div><div id="diagram"></div>${spatialPanel()}<div class="legend" id="legend">${legend()}</div></div>
+ <div class="data-inspector" id="data-inspector"><span class="studio-eyebrow">${esc(STUDIO_COPY.inspect)}</span><p id="inspection-copy" aria-live="polite">${esc(STUDIO_COPY.select)}</p></div>
  <div class="frame-caption"><span class="frame-number" id="frame-number"></span><div class="frame-copy"><h3 id="frame-title"></h3><p id="frame-description"></p></div></div>
  <div class="player-controls"><button class="icon-button" id="restart" aria-label="Restart animation" title="Restart">${icons.reset}</button><button class="icon-button" id="previous" aria-label="Previous step" title="Previous step">${icons.back}</button><button class="play-button" id="play" aria-label="Play animation"></button><button class="icon-button" id="next" aria-label="Next step" title="Next step">${icons.next}</button><input type="range" id="scrubber" min="0" max="1" value="0" step="1" aria-label="Implementation animation step"><span class="step-count" id="step-count"></span><select class="speed-select" id="speed" aria-label="Playback speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option><option value="2">2×</option></select></div></section>
  <aside class="insight-panel" aria-label="Selected implementation explanation"><div class="concept-card"><div class="mini-eyebrow"><span>↗</span> THE MENTAL MODEL</div><h2>${esc(shortConcept(t))}</h2><div class="formula" id="selected-formula"></div><p class="cost-label" id="cost-label"></p><div class="cost" id="selected-cost"></div><p class="cost-note" id="selected-cost-note"></p><div id="local-notation"></div></div><div class="usage-card"><h3>${icons.use} Where you’ll see it</h3><p id="usage-text"></p></div></aside></div>
+ <section class="experiment" id="experiment" hidden></section>
  <section class="how-section" aria-labelledby="how-heading"><div class="section-heading"><h2 id="how-heading"></h2><span id="explanation-mode"></span></div><div class="steps-grid" id="implementation-steps"></div></section>
+ ${teachingCheck(t)}
  <section id="comparison-section"></section>
  <section class="deeper-section" aria-labelledby="deeper-heading"><div class="section-heading"><h2 id="deeper-heading">Details worth understanding</h2><span>LAYOUT · CORRECTNESS · TRADEOFFS</span></div><div id="deeper-details" class="deeper-grid"></div></section>
  <aside class="detail-note">${icons.info}<p><strong>The detail that matters.</strong> ${esc(t.caveat)}</p></aside>
@@ -71,8 +77,10 @@ function renderPage(){
  $('#scrubber').addEventListener('input',ev=>{state.playing=false;state.frame=Number(ev.target.value);renderFrame();schedule();});
  $('#speed').value=state.speed;$('#speed').addEventListener('change',ev=>{state.speed=Number(ev.target.value);window.labSpeed=state.speed;renderFrame();schedule();});
  $('#share-link').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(location.href);toast('Link copied. Share the idea.');}catch{const tmp=document.createElement('textarea');tmp.value=location.href;tmp.style.position='fixed';tmp.style.opacity='0';document.body.append(tmp);tmp.select();const ok=document.execCommand('copy');tmp.remove();toast(ok?'Link copied. Share the idea.':'Copy the page URL from your address bar.');}});
+ bindStudio();
  if(t.section==='communication')setupSemantic(t);
  rebuild();
+ if(studioState.view==='space'&&spatialSupported(t))setStudioView('space');
 }
 function notationHTML(entries){
  const dl=rows=>`<dl class="symbol-list">${rows.map(([term,definition])=>`<dt>${esc(term)}</dt><dd>${esc(definition)}</dd>`).join('')}</dl>`;
@@ -117,28 +125,30 @@ function setupSemantic(t){
 }
 function renderSemantic(){
  clearTimeout(logicState.timer);if(!$('#semantic-diagram'))return;
- const f=logicState.frames[logicState.frame];window.labPlaying=logicState.playing&&!document.hidden;$('#semantic-diagram').innerHTML=semanticSVG(f);window.labPlaying=state.playing&&!document.hidden;
+ const f=logicState.frames[logicState.frame];window.labPlaying=logicState.playing&&!document.hidden;mountAnimatedScene($('#semantic-diagram'),semanticSVG(f),state.topic.id+'|logical');animateLogicalData(f);window.labPlaying=state.playing&&!document.hidden;
  $('#semantic-number').textContent=String(logicState.frame+1).padStart(2,'0');$('#semantic-frame-title').textContent=f.title;$('#semantic-frame-description').textContent=f.text;
  $('#semantic-count').textContent=`0${logicState.frame+1} / 03`;$('#semantic-scrubber').value=logicState.frame;$('#semantic-scrubber').style.setProperty('--progress',logicState.frame*50+'%');$('#semantic-scrubber').setAttribute('aria-valuetext',f.title);
  $('#semantic-previous').disabled=logicState.frame===0;$('#semantic-next').disabled=logicState.frame===2;$('#semantic-play').innerHTML=logicState.playing?icons.pause:icons.play;$('#semantic-play').setAttribute('aria-label',logicState.playing?'Pause logical animation':'Play logical animation');
- if(logicState.playing&&!document.hidden)logicState.timer=setTimeout(()=>{if(logicState.frame<2)logicState.frame++;if(logicState.frame===2)logicState.playing=false;renderSemantic();},3000);
+ if(logicState.playing&&!document.hidden)logicState.timer=setTimeout(()=>{if(logicState.frame<2)logicState.frame++;if(logicState.frame===2)logicState.playing=false;renderSemantic();},Math.max(4200,1700+f.text.length*28));
 }
 function metadata(){const t=state.topic;if(t.curriculum)return modelMetadata();return t.section==='communication'?`4 RANKS · ${t.id==='scan'?'INCLUSIVE SUM':t.id==='all-reduce'||t.id==='reduce-scatter'||t.id==='reduce'?'ELEMENTWISE SUM':'ILLUSTRATIVE BUFFERS'}`:t.id==='tensor-parallel'?`2 RANKS · ${state.algorithm.toUpperCase()}`:t.id==='pipeline-parallel'?pipelineMetadata(state.frames[0]):t.id==='hybrid-parallel'?'8 RANKS · 3 PARALLEL AXES':`${state.mode.toUpperCase()} · ILLUSTRATIVE EXAMPLE`;}
 function legend(){
  const t=state.topic;
  if(t.curriculum)return '<span>Illustrative dimensions · logical dependencies · not measured runtime</span>';
+ if(t.id==='hybrid-parallel'&&studioState.view==='space')return [0,1].map(i=>`<span class="legend-item"><span class="legend-dot" style="--c:${PALETTE[i]}"></span>${MT('data replica '+i,'数据副本 '+i)}</span>`).join('');
  if(t.id==='pipeline-parallel')return '<span>Microbatch color · C = chunk · R = rank</span>';
  let labels=t.id==='tensor-parallel'?['rank 0 feature shard','rank 1 feature shard']:t.id==='expert-parallel'?['source 0','source 1','source 2','source 3']:t.section==='communication'?(t.id==='all-to-all'||t.id==='all-to-all-v'?['source 0','source 1','source 2','source 3']:t.id==='barrier'?['arrived','waiting']:t.id==='scan'?['local prefix']:['shard 0','shard 1','shard 2','shard 3']):t.id==='pipeline-parallel'?['microbatch 1','microbatch 2','microbatch 3','microbatch 4']:t.id==='zero'||t.id==='fsdp'?['owner 0','owner 1','owner 2','owner 3']:['partition A','partition B','partition C','partition D'];
  return labels.map((label,i)=>`<span class="legend-item"><span class="legend-dot" style="--c:${PALETTE[t.id==='barrier'&&i===1?2:i]}"></span>${label}</span>`).join('');
 }
-function rebuild(){state.frame=0;state.frames=buildFrames(state.topic,state.algorithm,state.mode);$('#scrubber').max=state.frames.length-1;$('#scene-metadata').textContent=metadata();updateLesson();updateModelViewTabs();renderFrame();schedule();}
+function rebuild(){state.frame=0;state.frames=buildFrames(state.topic,state.algorithm,state.mode);$('#scrubber').max=state.frames.length-1;$('#scene-metadata').textContent=metadata();studioState.selection=null;updateLesson();updateModelViewTabs();updateStudioLesson();renderExperiment();renderFrame();schedule();}
 function renderFrame(){
- window.labPlaying=state.playing&&!document.hidden;const f=state.frames[state.frame];$('#diagram').innerHTML=sceneSVG(f);$('#frame-number').textContent=String(state.frame+1).padStart(2,'0');$('#frame-title').textContent=f.title;$('#frame-description').textContent=f.text;
+ window.labPlaying=state.playing&&!document.hidden;const f=state.frames[state.frame];mountAnimatedScene($('#diagram'),sceneSVG(f));$('#frame-number').textContent=String(state.frame+1).padStart(2,'0');$('#frame-title').textContent=f.title;$('#frame-description').textContent=f.text;
  $('#scrubber').value=state.frame;$('#scrubber').style.setProperty('--progress',(state.frame/(state.frames.length-1))*100+'%');$('#scrubber').setAttribute('aria-valuetext',`Step ${state.frame+1} of ${state.frames.length}: ${f.title}`);$('#step-count').textContent=`${String(state.frame+1).padStart(2,'0')} / ${String(state.frames.length).padStart(2,'0')}`;$('#previous').disabled=state.frame===0;$('#next').disabled=state.frame===state.frames.length-1;
  $('#play').innerHTML=state.playing?icons.pause:icons.play;$('#play').setAttribute('aria-label',state.playing?'Pause animation':'Play animation');
+ updateStudioFrame();
  if(!state.playing||document.hidden)$('#diagram svg').pauseAnimations?.();
 }
-function schedule(){clearTimeout(state.timer);if(state.playing&&!document.hidden)state.timer=setTimeout(()=>{state.frame=(state.frame+1)%state.frames.length;renderFrame();schedule();},(state.frame===state.frames.length-1?3700:2700)/state.speed);}
+function schedule(){clearTimeout(state.timer);if(state.playing&&!document.hidden)state.timer=setTimeout(()=>{state.frame=(state.frame+1)%state.frames.length;renderFrame();schedule();},Math.min(10000,Math.max(3700,1700+(state.frames[state.frame].text.length*28)))/state.speed);}
 function togglePlay(){state.playing=!state.playing;if(state.playing&&state.frame===state.frames.length-1)state.frame=0;renderFrame();schedule();}
 function manualStep(delta){state.playing=false;state.frame=Math.max(0,Math.min(state.frames.length-1,state.frame+delta));renderFrame();schedule();}
 let toastTimer;function toast(message){$('#toast').textContent=message;$('#toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('visible'),2500);}
@@ -147,9 +157,11 @@ $('.menu-button').addEventListener('click',()=>{const open=$('.sidebar').classLi
 $('.mobile-backdrop').addEventListener('click',closeMobile);$('#search').addEventListener('input',ev=>renderNav(ev.target.value));
 const dialog=$('#guide-dialog');document.querySelectorAll('[data-guide]').forEach(b=>b.addEventListener('click',()=>{dialog.showModal();document.body.classList.add('modal-open');}));
 $('#close-guide').addEventListener('click',()=>dialog.close());$('#start-exploring').addEventListener('click',()=>dialog.close());dialog.addEventListener('close',()=>document.body.classList.remove('modal-open'));dialog.addEventListener('click',ev=>{if(ev.target===dialog){const r=dialog.getBoundingClientRect();if(ev.clientX<r.left||ev.clientX>r.right||ev.clientY<r.top||ev.clientY>r.bottom)dialog.close();}});
-window.addEventListener('hashchange',navigate);document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderFrame();schedule();renderSemantic();}else{clearTimeout(logicState.timer);clearTimeout(state.timer);$('#diagram svg')?.pauseAnimations?.();}});
-window.addEventListener('keydown',ev=>{if(ev.target.matches('input,select,textarea,button')||dialog.open)return;if(ev.key==='/'){ev.preventDefault();if(matchMedia('(max-width:700px)').matches&&!$('.sidebar').classList.contains('open'))$('.menu-button').click();$('#search').focus();}if(ev.code==='Space'){ev.preventDefault();togglePlay();}if(ev.key==='ArrowRight'){ev.preventDefault();manualStep(1);}if(ev.key==='ArrowLeft'){ev.preventDefault();manualStep(-1);}if(ev.key==='Escape')closeMobile();});
+window.addEventListener('hashchange',navigate);document.addEventListener('visibilitychange',()=>{if(!document.hidden){renderFrame();schedule();renderSemantic();}else{clearTimeout(logicState.timer);clearTimeout(state.timer);$('#diagram svg')?.pauseAnimations?.();$('#semantic-diagram svg')?.pauseAnimations?.();document.getAnimations().forEach(a=>a.pause());}});
+window.addEventListener('keydown',ev=>{if(ev.defaultPrevented)return;if(ev.target.matches('input,select,textarea,button')||dialog.open)return;if(ev.key==='/'){ev.preventDefault();if(matchMedia('(max-width:700px)').matches&&!$('.sidebar').classList.contains('open'))$('.menu-button').click();$('#search').focus();}if(ev.code==='Space'){ev.preventDefault();togglePlay();}if(ev.key==='ArrowRight'){ev.preventDefault();manualStep(1);}if(ev.key==='ArrowLeft'){ev.preventDefault();manualStep(-1);}if(ev.key==='Escape')closeMobile();});
 navigate();
 
 matchMedia('(max-width:700px)').addEventListener('change',()=>{if(state.frames.length)renderFrame();if(logicState.frames.length)renderSemantic();});
 $('#topic-list').addEventListener('click',ev=>{if(ev.target.closest('.topic-link'))closeMobile();});
+
+matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change',ev=>{if(ev.matches){state.playing=false;logicState.playing=false;renderFrame();renderSemantic();schedule();}});
