@@ -24,6 +24,16 @@ Each communication page first animates its abstract input/output contract, then 
 
 **Models (24):** DeepSeek V2/V3/V3.1/V3.2/V4/V4.1/R1; Qwen2.5/3 dense/3 MoE/3-Next/3.5/3.8; Llama 2/3.1/4; GPT-2/3/gpt-oss and documented hosted-GPT scope; RWKV-7, Mamba-2, Stable Diffusion v1.5 and FLUX.1. Model pages show reference-checkpoint dimensions, family comparisons, operator chips and training/inference differences. Undisclosed hosted-model internals are identified explicitly.
 
+## Mathematical architecture theater
+
+Architecture and model structure views use a mathematical blackboard with front-facing tensor planes, stable feature/query/key/value colors, and explicit numerical transformations. Select any output cell to highlight its source coordinates, watch operands form a running result, and see the result arrive in that cell. Matrix labels show the two displayed axes; batch is B=1. Displayed entries round to two decimals; calculations retain full precision.
+
+Thirty disclosed architecture/model profiles have executable miniatures. The lessons carry actual values through a representative block: embedding, normalization, per-head attention, residuals, feature mixing and a prediction/loss head. GQA shows distinct queries sharing KV; MLA separates content/position caches and scores, then demonstrates key-projection absorption. Hybrid Qwen models offer a DeltaNet/GQA mixer switch. RWKV and Mamba illustrate fixed-size state, while compressed/cross-layer memory, CNN windows, ViT patches and diffusion/flow updates have their own lessons. The anatomy ribbon and expandable published topology keep the full released structure separate from the miniature. Hosted models with undisclosed internals retain a documented-interface view.
+
+Use **3D / 2D** to compare tensor planes with a flat presentation. Drag gently in 3D, reset the camera, replay a calculation or advance one arithmetic step. Chapter playback starts only when requested; the selected calculation animates once. Reduced-motion mode uses manual arithmetic steps, and WebGL failure automatically selects the complete flat view.
+
+These examples teach representative mathematics, not complete checkpoint execution. Mamba isolates the state-space core; compressed attention uses a clearly marked pooling surrogate; MoE uses explicit small expert functions; diffusion supplies an oracle scheduler prediction. Model-specific gates, conditioning, layer patterns and other operators remain documented in their dedicated tabs and source notes.
+
 ## Visual learning studio
 
 Every topic starts with an input → change → result explanation and ends with a conceptual self-check. Read the idea, follow the data one step at a time, then predict what changes when an input changes.
@@ -80,6 +90,11 @@ For model-specific source and example conventions, see [model-notes.md](model-no
 - `operator-workbench.js`: executable MLA example, operator shape/equation contracts and numerical replays.
 - `calculus.css`: computation panels, desktop side-by-side explanations and responsive MLA presentation.
 - `scripts/verify-calculations.cjs`: dependency-free collective/operator numerical assertions, also run in CI.
+- `architecture-content.js`: executable miniature models, chapter equations and cell-level source traces.
+- `architecture-studio.js`: Three.js tensor planes, moving numerical operands, calculation controls and flat fallback.
+- `architecture.css`: mathematical stage, anatomy ribbon and responsive matrix presentation.
+- `scripts/verify-architecture.cjs`: miniature tensor, arithmetic and model-profile checks, also run in CI.
+- `architecture-browser-verification.json`: this revision’s route, chapter, interaction and presentation audit.
 - `app.js`: routing, playback, search, and interaction.
 - `zh.js`: Chinese explanations, controls, and animation translations.
 - `preferences.js`: language/theme controls, preference persistence, and SVG contrast handling.
@@ -101,7 +116,9 @@ For model-specific source and example conventions, see [model-notes.md](model-no
 
 ## Verification
 
-The computation revision is checked in `calculus-verification.json`, `calculus-layout-verification.json` and `calculus-motion-verification.json`. It checks all 79 routes, 2,196 model/operator frames, 266 logical collective frames, independently specified MLA outputs and the algebraic equivalence of both attention paths. Run `node scripts/verify-calculations.cjs` for 461 dependency-free assertions covering all 12 collectives and 18 operators. Earlier studio audits below describe their own revision; the calculus reports cover the changed views.
+Run `node scripts/verify-architecture.cjs` to check the new miniature lessons across training/inference and both hybrid mixers, including every displayed output cell, source references, matrix products, probability normalization and independent convolution fixtures. The browser report records the new theater separately from earlier audits.
+
+The previous computation revision is checked in `calculus-verification.json`, `calculus-layout-verification.json` and `calculus-motion-verification.json`. It checks all 79 routes, 2,196 model/operator frames, 266 logical collective frames, independently specified MLA outputs and the algebraic equivalence of both attention paths. Run `node scripts/verify-calculations.cjs` for 461 dependency-free assertions covering all 12 collectives and 18 operators. Earlier studio audits below describe their own revision; the calculus reports cover the changed views.
 
 The visual studio is checked separately for all-topic teaching contracts, selected-view explanations, numerical experiments, matrix inspection, camera controls, expanded views, reduced motion and WebGL fallback. Its responsive audit covers all 79 topics in both languages and themes at seven widths. Numerical operator checks independently compare attention gradients, recurrence and other worked calculations. See `studio-verification.json` and `visual-verification.json` for the current measured counts.
 

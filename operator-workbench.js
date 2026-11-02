@@ -133,7 +133,7 @@ function checkpointShapeLine(f){
 }
 function renderOperatorWorkbench(f){
  clearTimeout(computationState.timer);computationState.run=(computationState.run||0)+1;computationState.duration=0;const host=document.querySelector('#operator-workbench');if(!host)return;
- if(f.kind!=='model'){host.innerHTML='';return;}
+ if(f.kind!=='model'||f.story){host.innerHTML='';return;}
  const spec=f.scene==='overview'?overviewContract(f):operatorContract(f),key=f.topicId+'|'+f.layout+'|'+f.stage+'|'+f.mode;
  if(key!==computationState.key){computationState.selection=0;computationState.key=key;}
  const traces=spec.traces||[],selected=Math.min(computationState.selection,Math.max(0,traces.length-1)),trace=traces[selected];

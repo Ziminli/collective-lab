@@ -187,6 +187,7 @@ function modelSelectedLesson(t,option,mode){
 }
 function modelFrames(topic,option,mode){
  const view=topic.modelViews[option]||Object.values(topic.modelViews)[0],isOverview=view.scene==='overview';let frames=[];
+ if(typeof architectureFrames==='function'){const math=architectureFrames(topic,view,option,mode);if(math)return math;}
  const trainingDiffusion=isOverview&&topic.modelData.kind==='diffusion'&&mode==='Training',activeFlow=trainingDiffusion?diffusionTrainingFlow(topic.modelData):view.flow||topic.modelData.flow;
  if(isOverview)frames=activeFlow.map((n,i)=>({kind:'model',scene:'overview',stage:i,title:n.title,text:n.text,flow:activeFlow}));
  else{

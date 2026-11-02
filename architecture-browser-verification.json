@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "base": "http://localhost:8847/",
+  "routes": 79,
+  "storyFrames": 1140,
+  "operatorViews": 298,
+  "presentations": 200,
+  "errors": [],
+  "issues": []
+}

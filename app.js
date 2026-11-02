@@ -29,7 +29,8 @@ function navigate(){
  clearTimeout(logicState.timer);logicState.playing=false;state.playing=topic.section!=='communication'&&!matchMedia('(prefers-reduced-motion: reduce)').matches;
  state.topic=topic;state.frame=0;state.mode=topic.tags.includes('Training')?'Training':'Inference';
  state.algorithm=topicOptions(topic,state.mode)[0]||'';
- tensorSpace.detach();semanticSpace.detach();document.body.classList.remove('studio-expanded-body');studioState.selection=null;
+ if(topic.curriculum&&topic.modelViews[state.algorithm]?.scene==='overview')state.playing=false;
+ tensorSpace.detach();semanticSpace.detach();architectureStage.detach();document.body.classList.remove('studio-expanded-body');studioState.selection=null;
  $('#search').value='';renderNav();closeMobile();renderPage();
  document.title=`${topic.name} — Collective Lab`;
  document.querySelectorAll('.section-nav a').forEach(a=>{let active=a.dataset.section===topic.section;a.classList.toggle('active',active);active?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current');});
@@ -54,7 +55,7 @@ function renderPage(){
  ${t.section==='communication'?semanticPanel(t):t.curriculum?renderModelIntro(t):''}
  <div class="lesson-heading" id="implementation-heading"><h2>${t.section==='communication'?'<span>02</span> How it is implemented':t.curriculum?'Explore the structure and operators':'Explore the layout and schedule'}</h2><p>${t.section==='communication'?'Same logical result. Different schedules, traffic, and startup costs.':t.curriculum?'Select a structure or operator. Step through its data flow, then inspect the equations.':'Change the available layout, stage, or execution mode. The explanation follows your selection.'}</p></div>
  <div class="study-grid"><section class="visual-card" aria-label="Interactive ${esc(t.name)} implementation"><div class="visual-header"><div class="visual-heading"><span class="live-indicator"></span>${t.section==='communication'?'Implementation trace':'See it in motion'}</div><div class="visual-selectors">${select}${mode}${!select&&!mode?`<span class="mini-eyebrow">${t.tags[0].toUpperCase()}</span>`:''}</div></div>
- ${studioToolbar(t)}<div id="operator-workbench"></div>
+ ${studioToolbar(t)}<div id="architecture-studio" hidden></div><div id="operator-workbench"></div>
  <div class="scene-wrap ${t.section==='communication'?'':'concept-view'}"><div class="scene-topline"><span id="scene-metadata"></span><span>LOGICAL STEPS · NOT TO SCALE</span></div><div id="diagram"></div>${spatialPanel()}<div class="legend" id="legend">${legend()}</div></div>
  <div class="data-inspector" id="data-inspector"><span class="studio-eyebrow">${esc(STUDIO_COPY.inspect)}</span><p id="inspection-copy" aria-live="polite">${esc(STUDIO_COPY.select)}</p></div>
  <div class="frame-caption"><span class="frame-number" id="frame-number"></span><div class="frame-copy"><h3 id="frame-title"></h3><p id="frame-description"></p></div></div>
@@ -148,11 +149,12 @@ function legend(){
 }
 function rebuild(){state.frame=0;state.frames=buildFrames(state.topic,state.algorithm,state.mode);$('#scrubber').max=state.frames.length-1;$('#scene-metadata').textContent=metadata();studioState.selection=null;updateLesson();updateModelViewTabs();updateStudioLesson();renderExperiment();renderFrame();schedule();}
 function renderFrame(){
- window.labPlaying=state.playing&&!document.hidden;const f=state.frames[state.frame];mountAnimatedScene($('#diagram'),sceneSVG(f));$('#frame-number').textContent=String(state.frame+1).padStart(2,'0');$('#frame-title').textContent=f.title;$('#frame-description').textContent=f.text;
+ window.labSpeed=state.speed;window.labPlaying=state.playing&&!document.hidden;const f=state.frames[state.frame];renderArchitectureStudio(f);mountAnimatedScene($('#diagram'),sceneSVG(f));$('#frame-number').textContent=String(state.frame+1).padStart(2,'0');$('#frame-title').textContent=f.title;$('#frame-description').textContent=f.text;
  $('#scrubber').value=state.frame;$('#scrubber').style.setProperty('--progress',(state.frame/(state.frames.length-1))*100+'%');$('#scrubber').setAttribute('aria-valuetext',`Step ${state.frame+1} of ${state.frames.length}: ${f.title}`);$('#step-count').textContent=`${String(state.frame+1).padStart(2,'0')} / ${String(state.frames.length).padStart(2,'0')}`;$('#previous').disabled=state.frame===0;$('#next').disabled=state.frame===state.frames.length-1;
  $('#play').innerHTML=state.playing?icons.pause:icons.play;$('#play').setAttribute('aria-label',state.playing?'Pause animation':'Play animation');
  updateStudioFrame();
  if(typeof renderOperatorWorkbench==='function')renderOperatorWorkbench(f);
+ if(f.story)computationState.duration=architectureStage.trace.length*1850+1600;
  if(!state.playing||document.hidden)$('#diagram svg').pauseAnimations?.();
 }
 function schedule(){clearTimeout(state.timer);if(state.playing&&!document.hidden)state.timer=setTimeout(()=>{state.frame=(state.frame+1)%state.frames.length;renderFrame();schedule();},Math.max(Math.min(10000,Math.max(3700,1700+(state.frames[state.frame].text.length*28))),computationState.duration||0)/state.speed);}

@@ -35,7 +35,7 @@ def main():
     required = {'styles.css', 'content.js', 'lessons.js', 'animations.js',
                 'tensor-views.js', 'semantics.js', 'zh.js', 'pipeline-plans.js',
                 'vendor/three.min.js', 'teaching-content.js', 'teaching.js', 'spatial.js', 'motion.js', 'experiments.js', 'studio.css', 'calculus.css', 'operator-workbench.js',
-                'pipeline.js', 'model-content.js', 'model-views.js', 'model.css', 'app.js', 'preferences.js'}
+                'pipeline.js', 'model-content.js', 'model-views.js', 'model.css', 'app.js', 'preferences.js', 'architecture-content.js', 'architecture-studio.js', 'architecture.css'}
     if parser.assets != required:
         raise ValueError(f'Unexpected asset manifest: {parser.assets ^ required}')
     DEST.mkdir(exist_ok=True)

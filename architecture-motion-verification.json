@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "operandsMove": true,
+  "sourceHighlight": true,
+  "pauseFreezes": true,
+  "resumeContinues": true,
+  "resultHiddenBeforeArrival": true,
+  "resultArrivesInSelectedCell": true,
+  "screenshots": [
+    "../architecture-theater-desktop.png",
+    "../architecture-mla-desktop.png",
+    "../architecture-theater-mobile-zh.png"
+  ]
+}

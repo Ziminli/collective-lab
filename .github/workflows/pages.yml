@@ -27,6 +27,7 @@ jobs:
         run: |
           python3 scripts/build-site.py
           node scripts/verify-calculations.cjs
+          node scripts/verify-architecture.cjs
           for file in _site/*.js; do node --check "$file"; done
       - name: Configure Pages
         if: github.event_name != 'pull_request'
