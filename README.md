@@ -101,7 +101,7 @@ For model-specific source and example conventions, see [model-notes.md](model-no
 
 ## Verification
 
-The computation revision is checked in `calculus-verification.json`, `calculus-layout-verification.json` and `calculus-motion-verification.json`. It checks all 79 routes, 2,196 model/operator frames, 266 logical collective frames, independently specified MLA outputs and the algebraic equivalence of both attention paths. Run `node scripts/verify-calculations.cjs` for 457 dependency-free assertions covering all 12 collectives and 18 operators. Earlier studio audits below describe their own revision; the calculus reports cover the changed views.
+The computation revision is checked in `calculus-verification.json`, `calculus-layout-verification.json` and `calculus-motion-verification.json`. It checks all 79 routes, 2,196 model/operator frames, 266 logical collective frames, independently specified MLA outputs and the algebraic equivalence of both attention paths. Run `node scripts/verify-calculations.cjs` for 461 dependency-free assertions covering all 12 collectives and 18 operators. Earlier studio audits below describe their own revision; the calculus reports cover the changed views.
 
 The visual studio is checked separately for all-topic teaching contracts, selected-view explanations, numerical experiments, matrix inspection, camera controls, expanded views, reduced motion and WebGL fallback. Its responsive audit covers all 79 topics in both languages and themes at seven widths. Numerical operator checks independently compare attention gradients, recurrence and other worked calculations. See `studio-verification.json` and `visual-verification.json` for the current measured counts.
 

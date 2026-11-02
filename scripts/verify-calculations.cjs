@@ -17,6 +17,8 @@ for(const {id,traces}of data.logical)for(const [entry,frames]of traces.entries()
   equal(sum,10*(entry+1),id+' selected sum');
   equal(frames.at(-1).outputs,id==='all-reduce'?Array(4).fill([10,20,30,40]):id==='reduce'?[[10,20,30,40],...Array(3).fill([null,null,null,null])]:[[10],[20],[30],[40]],id+' full output');
  }
+ if(id==='all-to-all-v')for(const f of frames){if(f.emptyBucket)equal(Boolean(f.transfer),false,'zero-count bucket has no data transfer');}
+ if(id==='barrier')equal(frames.map(f=>f.inputs.filter(row=>row[0].text==='entered').length),[2,3,4,4],'barrier arrival progression');
  if(id==='scan')equal(frames.at(-1).outputs,[[1],[3],[6],[10]],'ordered prefixes');
  for(const f of frames.filter(f=>f.transfer)){const t=f.transfer,raw=f.outputs[t.to][t.destColumn??t.column],value=raw&&typeof raw==='object'?raw.text:raw;equal(value,t.value,id+' copy destination');}
  if(id==='all-gather')equal(frames[0].inputs.map(r=>r.length),[1,1,1,1],'compact gather inputs');

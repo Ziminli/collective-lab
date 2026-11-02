@@ -1,0 +1,7 @@
+{
+  "barrierCompletionOnlyAfterAllArrive": "passed",
+  "zeroCountHasNoDataPayload": "passed",
+  "gatherSourceColorPreserved": "passed",
+  "numericalAssertions": 461,
+  "errors": []
+}

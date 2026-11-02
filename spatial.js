@@ -81,16 +81,16 @@ class TensorSpace{
   }
   this.label(MT('INPUTS','输入'),-3.4,.6,-3.35,.8);this.label(MT('OUTPUTS','输出'),3.4,.6,-3.35,.8);
   if(f.arithmetic){const a=f.arithmetic;
-   this.valueTile('oldsum',a.previous,[-.8,.65,-.1],SPATIAL_COLORS[1]);this.label('+',0,.95,-.1,.8);
+   this.valueTile('oldsum',a.previous,[-.8,.65,-.1],SPATIAL_COLORS[f.entry%4]);this.label('+',0,.95,-.1,.8);
    const incoming=this.valueTile('operand',a.value,[.8,.65,-.1],SPATIAL_COLORS[a.column%4]);this.reveal(incoming,.55);
    this.payload('contribution',a.value,position('input',a.rank,a.column),[.8,.65,-.1],SPATIAL_COLORS[a.column%4]);
-   this.label('=',0,.95,1.05,.85);const result=this.valueTile('sum',a.result,[0,.65,1.9],SPATIAL_COLORS[3]);this.reveal(result,.75);
+   this.label('=',0,.95,1.05,.85);const result=this.valueTile('sum',a.result,[0,.65,1.9],SPATIAL_COLORS[f.entry%4]);this.reveal(result,.75);
    this.label(MT('old sum + R'+a.rank+'['+a.column+']','旧和 + R'+a.rank+'['+a.column+']'),0,1.7,-1.4,.65);
   }else if(f.transfer){const t=f.transfer,start=t.from==='sum'?[0,.65,0]:position('input',t.from,t.column);
-   if(t.from==='sum')this.valueTile('completed',t.value,start,SPATIAL_COLORS[3]);
-   this.payload('copy',t.value,start,position('output',t.to,t.destColumn??t.column),SPATIAL_COLORS[t.column%4]);
+   if(t.from==='sum')this.valueTile('completed',t.value,start,SPATIAL_COLORS[f.entry%4]);
+   const raw=f.inputs[t.from]?.[t.column],color=raw&&typeof raw==='object'?raw.color:['all-gather','gather'].includes(f.id)?t.from:t.column;this.payload('copy',t.value,start,position('output',t.to,t.destColumn??t.column),SPATIAL_COLORS[color%4]);
    this.label(MT('COPY · same value','复制 · 数值不变'),0,1.5,0,.65);
-  }else this.label(f.id==='barrier'?'✓':'['+f.entry+']',0,1,0,1.1);
+  }else this.label(f.id==='barrier'?(f.complete?'✓':(f.stage+2)+' / 4'):'['+f.entry+']',0,1,0,1.1);
   this.note=f.text;
  }
  ranks(f,t){const pos=[[-2.25,0,-1.55],[2.25,0,-1.55],[2.25,0,1.55],[-2.25,0,1.55]],previous=state.frames[Math.max(0,state.frame-1)];
