@@ -24,6 +24,12 @@ Each communication page first animates its abstract input/output contract, then 
 
 **Models (24):** DeepSeek V2/V3/V3.1/V3.2/V4/V4.1/R1; Qwen2.5/3 dense/3 MoE/3-Next/3.5/3.8; Llama 2/3.1/4; GPT-2/3/gpt-oss and documented hosted-GPT scope; RWKV-7, Mamba-2, Stable Diffusion v1.5 and FLUX.1. Model pages show reference-checkpoint dimensions, family comparisons, operator chips and training/inference differences. Undisclosed hosted-model internals are identified explicitly.
 
+## Interactive workflow explorer
+
+Every topic opens with an overall workflow and explicit tensor input/output contracts. Hover or keyboard-focus a step to highlight its immediate dependencies and inspect its action, shapes and equation. Click or press Enter to open a focused sub-workflow beside a worked numerical example. Nested steps reveal operands and results; breadcrumbs and Escape return to the overview and restore the selected layout and focus. Training targets, residual paths, encoder memory, and persistent decode state are distinguished explicitly.
+
+The full reference explanations, comparisons and sources remain available below the overview. English/Chinese and light/dark controls also work inside the focused view. Mobile layouts stack the diagram and example vertically.
+
 ## Mathematical architecture theater
 
 Architecture and model structure views use a mathematical blackboard with front-facing tensor planes, stable feature/query/key/value colors, and explicit numerical transformations. Select any output cell to highlight its source coordinates, watch operands form a running result, and see the result arrive in that cell. Matrix labels show the two displayed axes; batch is B=1. Displayed entries round to two decimals; calculations retain full precision.
@@ -95,6 +101,8 @@ For model-specific source and example conventions, see [model-notes.md](model-no
 - `architecture.css`: mathematical stage, anatomy ribbon and responsive matrix presentation.
 - `scripts/verify-architecture.cjs`: miniature tensor, arithmetic and model-profile checks, also run in CI.
 - `architecture-browser-verification.json`: this revision’s route, chapter, interaction and presentation audit.
+- `workflow-content.js`: workflow DAGs, per-step tensor contracts, and drilldown schemas.
+- `workflow-explorer.js`, `workflow.css`: overview, hover inspection, nested focused views and keyboard navigation.
 - `app.js`: routing, playback, search, and interaction.
 - `zh.js`: Chinese explanations, controls, and animation translations.
 - `preferences.js`: language/theme controls, preference persistence, and SVG contrast handling.
@@ -115,6 +123,8 @@ For model-specific source and example conventions, see [model-notes.md](model-no
 - `verification.json`: completed browser verification results.
 
 ## Verification
+
+Run `node scripts/verify-workflows.cjs` to validate all topic/mode/layout graphs, nested tensor contracts, graph endpoints, residual routing, encoder-decoder branches and training/inference state boundaries. `workflow-browser-verification.json` covers the overview and focused interactions; older browser audits below describe their respective revisions.
 
 Run `node scripts/verify-architecture.cjs` to check the new miniature lessons across training/inference and both hybrid mixers, including every displayed output cell, source references, matrix products, probability normalization and independent convolution fixtures. The browser report records the new theater separately from earlier audits.
 

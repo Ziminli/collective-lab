@@ -1,0 +1,19 @@
+{
+  "status": "passed",
+  "revision": "working-tree",
+  "url": "http://localhost:8847/",
+  "topics": 79,
+  "variants": 449,
+  "responsiveTopicPresentations": 316,
+  "focusedSteps": 1046,
+  "layoutLanguageThemeCombinations": 20,
+  "exactAssetMatches": null,
+  "keyboardAndReturnFocus": true,
+  "hoverDependencies": true,
+  "nestedNavigation": true,
+  "languageThemeStatePreserved": true,
+  "collectiveArithmetic": true,
+  "referenceToggle": true,
+  "browserErrors": [],
+  "failedAssets": []
+}

@@ -145,7 +145,7 @@ function renderArchitectureStudio(f){
  const active=!!f?.story;document.body.classList.toggle('has-math-story',active);
  const host=document.querySelector('#architecture-studio');if(!host)return;
  host.hidden=!active;
- if(active)architectureStage.render(f);else{architectureStage.detach();host.innerHTML='';}
+ if(active&&!(typeof workflowIsOverview==='function'&&workflowIsOverview()))architectureStage.render(f);else{architectureStage.detach();host.innerHTML='';}
 }
 
 document.addEventListener('visibilitychange',()=>{if(!architectureStage.host)return;if(document.hidden){architectureStage.background=architectureStage.run||!!architectureStage.motion;architectureStage.stop();}else if(architectureStage.background){architectureStage.background=false;architectureStage.resume();}});
